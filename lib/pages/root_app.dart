@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:xbeat/pages/home.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -22,14 +23,7 @@ class _RootAppState extends State<RootApp> {
     return IndexedStack(
       index: activeTab,
       children: [
-        Center(
-          child: Text(
-            'Home',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        Home(),
         Center(
           child: Text(
             'Library',
@@ -74,7 +68,7 @@ class _RootAppState extends State<RootApp> {
                 },
                 icon: Icon(
                   Icons.home,
-                  color: activeTab==0 ? Colors.blue[300]: Colors.white,
+                  color: activeTab == 0 ? Colors.blue[300] : Colors.white,
                 )),
             IconButton(
                 onPressed: () {
@@ -84,7 +78,7 @@ class _RootAppState extends State<RootApp> {
                 },
                 icon: Icon(
                   Icons.library_add_check,
-                  color: activeTab== 1 ? Colors.blue[300]: Colors.white,
+                  color: activeTab == 1 ? Colors.blue[300] : Colors.white,
                 )),
             IconButton(
                 onPressed: () {
@@ -93,8 +87,9 @@ class _RootAppState extends State<RootApp> {
                   });
                 },
                 icon: Icon(
-                  Icons.bookmark,
-                  color: activeTab == 2 ? Colors.blue[300]: Colors.white,
+                  Icons.search,
+                  semanticLabel: "Search",
+                  color: activeTab == 2 ? Colors.blue[300] : Colors.white,
                 )),
             IconButton(
               onPressed: () {
@@ -104,7 +99,7 @@ class _RootAppState extends State<RootApp> {
               },
               icon: Icon(
                 Icons.settings,
-                color: activeTab == 3 ? Colors.blue[300]: Colors.white,
+                color: activeTab == 3 ? Colors.blue[300] : Colors.white,
               ),
             ),
           ],
