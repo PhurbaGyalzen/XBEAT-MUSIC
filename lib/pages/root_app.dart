@@ -13,9 +13,11 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.black,
       body: getBody(),
-      bottomNavigationBar: getButtomAppBar(),
+      resizeToAvoidBottomInset: false,
+      bottomNavigationBar: _getNavigationBar(),
     );
   }
 
@@ -52,59 +54,40 @@ class _RootAppState extends State<RootApp> {
     );
   }
 
-  Widget getButtomAppBar() {
-    return (BottomAppBar(
-      color: Colors.black,
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    activeTab = 0;
-                  });
-                },
-                icon: Icon(
-                  Icons.home,
-                  color: activeTab == 0 ? Colors.blue[300] : Colors.white,
-                )),
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    activeTab = 1;
-                  });
-                },
-                icon: Icon(
-                  Icons.library_add_check,
-                  color: activeTab == 1 ? Colors.blue[300] : Colors.white,
-                )),
-            IconButton(
-                onPressed: () {
-                  setState(() {
-                    activeTab = 2;
-                  });
-                },
-                icon: Icon(
-                  Icons.search,
-                  semanticLabel: "Search",
-                  color: activeTab == 2 ? Colors.blue[300] : Colors.white,
-                )),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  activeTab = 3;
-                });
-              },
-              icon: Icon(
-                Icons.settings,
-                color: activeTab == 3 ? Colors.blue[300] : Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ));
+  Widget _getNavigationBar() {
+    void _onItemTapped(int index) {
+      setState(() {
+        activeTab = index;
+      });
+    }
+
+    return BottomNavigationBar(
+        landscapeLayout: BottomNavigationBarLandscapeLayout.linear,
+        elevation: 0, // to get rid of the shadow
+        currentIndex: activeTab,
+        selectedItemColor: Colors.deepOrange[200],
+        onTap: _onItemTapped,
+        backgroundColor: Color(
+            0xA6000000), // transparent, you could use 0x44aaaaff to make it slightly less transparent with a blue hue.
+        type: BottomNavigationBarType.fixed,
+        unselectedItemColor: Colors.white,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'List',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ]);
   }
 }

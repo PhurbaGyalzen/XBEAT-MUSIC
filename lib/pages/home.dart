@@ -44,7 +44,7 @@ class _HomeState extends State<Home> {
           delegate: SliverChildListDelegate([
         SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 10),
+            padding: const EdgeInsets.only(top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -259,6 +259,9 @@ class _HomeState extends State<Home> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                              ),
+                              SizedBox(
+                                height: 60,
                               ),
                             ]),
                           ),
