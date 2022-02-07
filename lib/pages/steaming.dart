@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_button_notifier.dart';
+import '../theme/colors.dart';
 
 class StreamApp extends StatefulWidget {
   const StreamApp({Key? key}) : super(key: key);
@@ -31,16 +32,58 @@ class _StreamAppState extends State<StreamApp> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+                  child: Container(
+                    width: size.width - 100,
+                    height: size.width - 100,
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: Color(0xFF04be4e),
+                          blurRadius: 50,
+                          spreadRadius: 5,
+                          offset: Offset(-10, 40))
+                    ], borderRadius: BorderRadius.circular(20)),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+                  child: Container(
+                    width: size.width - 60,
+                    height: size.width - 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                            "http://192.168.1.17:3000/images/default-profile.jpg"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 40,
+            ),
             CurrentSongTitle(),
-            Playlist(),
-            AddRemoveSongButtons(),
+            Expanded(
+              child: SizedBox(
+                height: 80,
+              ),
+            ),
+            // AddRemoveSongButtons(),
             AudioProgressBar(),
             AudioControlButtons(),
+            SizedBox(height: 40),
           ],
         ),
       ),
@@ -55,13 +98,30 @@ class CurrentSongTitle extends StatelessWidget {
     return ValueListenableBuilder<String>(
       valueListenable: _pageManager.currentSongTitleNotifier,
       builder: (_, title, __) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Text(title,
-              style: TextStyle(
-                fontSize: 40,
-                color: Colors.white,
-              )),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              width: 150,
+              child: Text(
+                "This is the song description",
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 15, color: Colors.white.withOpacity(0.5)),
+              ),
+            )
+          ],
         );
       },
     );
@@ -128,6 +188,8 @@ class AudioProgressBar extends StatelessWidget {
           buffered: value.buffered,
           total: value.total,
           onSeek: _pageManager.seek,
+          progressBarColor: primary,
+          thumbColor: primary,
           timeLabelTextStyle: TextStyle(color: Colors.grey[400]),
         );
       },
@@ -216,29 +278,27 @@ class PlayButton extends StatelessWidget {
           case ButtonState.loading:
             return Container(
               margin: EdgeInsets.all(10.0),
-              width:40.0,
+              width: 40.0,
               height: 40.0,
               child: CircularProgressIndicator(),
             );
           case ButtonState.paused:
             return FloatingActionButton(
-              child:
-                  Icon(Icons.play_arrow_rounded, color: Colors.black, size:40),
+              child: Icon(Icons.play_arrow_rounded, color: white, size: 40),
               onPressed: _pageManager.play,
               foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-
+              backgroundColor: primary,
             );
           case ButtonState.playing:
             return FloatingActionButton(
               child: Icon(
                 Icons.pause_rounded,
-                color: Colors.black,
+                color: white,
                 size: 40,
               ),
               onPressed: _pageManager.pause,
               foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
+              backgroundColor: primary,
             );
         }
       },
