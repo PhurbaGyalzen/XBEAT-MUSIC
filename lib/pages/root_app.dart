@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xbeat/pages/home.dart';
 import 'package:xbeat/pages/player.dart';
 import 'package:xbeat/pages/just_play.dart';
+import 'package:xbeat/pages/steaming.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _RootAppState extends State<RootApp> {
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.black,
-      body: getBody(),
+      body: SafeArea(child: getBody()),
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: _getNavigationBar(),
     );
@@ -29,14 +30,7 @@ class _RootAppState extends State<RootApp> {
       children: [
         Home(),
         AudioScreen(),
-        Center(
-          child: Text(
-            'Bookmark',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        StreamApp(),
         MyPlayer(),
       ],
     );
