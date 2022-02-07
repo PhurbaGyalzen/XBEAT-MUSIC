@@ -36,12 +36,12 @@ class PageManager {
   void _setInitialPlaylist() async {
     const prefix = 'https://www.soundhelix.com/examples/mp3';
     final song1 = Uri.parse('$prefix/SoundHelix-Song-1.mp3');
-    final song2 = Uri.parse('$prefix/SoundHelix-Song-2.mp3');
-    final song3 = Uri.parse('$prefix/SoundHelix-Song-3.mp3');
+    final song2 = Uri.parse('http://192.168.1.17:3000/stream/song/Real Friends - CAMILA CABELLO ft SWAE LEE.mp3');
+    final song3 = Uri.parse('http://192.168.1.17:3000/stream/song/indie-folk-king-around-here-15045.mp3');
     _playlist = ConcatenatingAudioSource(children: [
       AudioSource.uri(song1, tag: 'Song 1'),
-      AudioSource.uri(song2, tag: 'Song 2'),
-      AudioSource.uri(song3, tag: 'Song 3'),
+      AudioSource.uri(song2, tag: 'Real Friends'),
+      AudioSource.uri(song3, tag: 'Around Here'),
     ]);
     await _audioPlayer.setAudioSource(_playlist);
   }

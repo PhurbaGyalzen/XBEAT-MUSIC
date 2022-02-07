@@ -142,7 +142,8 @@ class AudioControlButtons extends StatelessWidget {
     return Container(
       height: 60,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           RepeatButton(),
           PreviousSongButton(),
@@ -190,10 +191,14 @@ class PreviousSongButton extends StatelessWidget {
     return ValueListenableBuilder<bool>(
       valueListenable: _pageManager.isFirstSongNotifier,
       builder: (_, isFirst, __) {
-        return IconButton(
-          icon: Icon(Icons.skip_previous, color: isFirst? Colors.grey: Colors.white),
-          onPressed:
-              (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+        return Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: IconButton(
+            icon: Icon(Icons.skip_previous_rounded,
+                color: isFirst ? Colors.grey : Colors.white, size: 45),
+            onPressed:
+                (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+          ),
         );
       },
     );
@@ -210,22 +215,30 @@ class PlayButton extends StatelessWidget {
         switch (value) {
           case ButtonState.loading:
             return Container(
-              margin: EdgeInsets.all(8.0),
-              width: 32.0,
-              height: 32.0,
+              margin: EdgeInsets.all(10.0),
+              width:40.0,
+              height: 40.0,
               child: CircularProgressIndicator(),
             );
           case ButtonState.paused:
-            return IconButton(
-              icon: Icon(Icons.play_arrow, color: Colors.white),
-              iconSize: 32.0,
+            return FloatingActionButton(
+              child:
+                  Icon(Icons.play_arrow_rounded, color: Colors.black, size:40),
               onPressed: _pageManager.play,
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+
             );
           case ButtonState.playing:
-            return IconButton(
-              icon: Icon(Icons.pause, color: Colors.white),
-              iconSize: 32.0,
+            return FloatingActionButton(
+              child: Icon(
+                Icons.pause_rounded,
+                color: Colors.black,
+                size: 40,
+              ),
               onPressed: _pageManager.pause,
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
             );
         }
       },
@@ -242,8 +255,9 @@ class NextSongButton extends StatelessWidget {
       builder: (_, isLast, __) {
         return IconButton(
           icon: Icon(
-            Icons.skip_next,
+            Icons.skip_next_rounded,
             color: isLast ? Colors.grey : Colors.white,
+            size: 45,
           ),
           onPressed: (isLast) ? null : _pageManager.onNextSongButtonPressed,
         );
@@ -265,7 +279,7 @@ class ShuffleButton extends StatelessWidget {
                   Icons.shuffle,
                   color: Colors.blue,
                 )
-              : Icon(Icons.shuffle, color: Colors.grey),
+              : Icon(Icons.shuffle_outlined, color: Colors.grey),
           onPressed: _pageManager.onShuffleButtonPressed,
         );
       },
