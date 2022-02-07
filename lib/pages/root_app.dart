@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xbeat/pages/home.dart';
+import 'package:xbeat/pages/player.dart';
+import 'package:xbeat/pages/just_play.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -26,14 +28,7 @@ class _RootAppState extends State<RootApp> {
       index: activeTab,
       children: [
         Home(),
-        Center(
-          child: Text(
-            'Library',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        AudioScreen(),
         Center(
           child: Text(
             'Bookmark',
@@ -42,14 +37,7 @@ class _RootAppState extends State<RootApp> {
             ),
           ),
         ),
-        Center(
-          child: Text(
-            'Settings',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        MyPlayer(),
       ],
     );
   }
