@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:xbeat/pages/miniplayer.dart';
+import 'package:xbeat/theme/colors.dart';
+
 // import './player.dart';
 // import 'package:get/get.dart';
 
@@ -51,7 +54,13 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                      bottom: 10.0,
+                    ),
+                    child: MiniPlayer()),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0, top: 5.0),
                   child: Text(
                     "Recommended Songs",
                     style: TextStyle(

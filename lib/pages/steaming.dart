@@ -1,4 +1,5 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:get/get.dart';
 import 'page_manager.dart';
 import 'package:flutter/material.dart';
 import '../notifiers/play_button_notifier.dart';
@@ -23,71 +24,84 @@ class _StreamAppState extends State<StreamApp> {
 
   @override
   void dispose() {
-    getIt<PageManager>().dispose();
+    // getIt<PageManager>().dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
-                  child: Container(
-                    width: size.width - 100,
-                    height: size.width - 100,
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                          color: Color(0xFF04be4e),
-                          blurRadius: 50,
-                          spreadRadius: 5,
-                          offset: Offset(-10, 40))
-                    ], borderRadius: BorderRadius.circular(20)),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: black,
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_downward_rounded)),
+      ),
+      backgroundColor: black,
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 20),
+                    child: Container(
+                      width: size.width - 100,
+                      height: size.width - 100,
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                            color: Color(0xFF04be4e),
+                            blurRadius: 50,
+                            spreadRadius: 5,
+                            offset: Offset(-10, 40))
+                      ], borderRadius: BorderRadius.circular(20)),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
-                  child: Container(
-                    width: size.width - 60,
-                    height: size.width - 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            "http://192.168.1.17:3000/images/default-profile.jpg"),
-                        fit: BoxFit.cover,
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 30, right: 30, top: 20),
+                    child: Container(
+                      width: size.width - 60,
+                      height: size.width - 60,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              "http://192.168.1.17:3000/images/default-profile.jpg"),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            CurrentSongTitle(),
-            Expanded(
-              child: SizedBox(
-                height: 80,
+                ],
               ),
-            ),
-            // AddRemoveSongButtons(),
-            AudioProgressBar(),
-            AudioControlButtons(),
-            SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                getIt<PageManager>().loadNewPlaylist();
-              },
-              child: Text(" Play New Playlist"),
-            )
-          ],
+              SizedBox(
+                height: 40,
+              ),
+              CurrentSongTitle(),
+              Expanded(
+                child: SizedBox(
+                  height: 80,
+                ),
+              ),
+              // AddRemoveSongButtons(),
+              AudioProgressBar(),
+              AudioControlButtons(),
+              SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: () {
+                  getIt<PageManager>().loadNewPlaylist();
+                },
+                child: Text(" Play New Playlist"),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -195,6 +209,7 @@ class AudioProgressBar extends StatelessWidget {
           progressBarColor: primary,
           thumbColor: primary,
           timeLabelTextStyle: TextStyle(color: Colors.grey[400]),
+          barHeight: 5.0,
         );
       },
     );
@@ -290,6 +305,7 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.paused:
             return FloatingActionButton(
+              heroTag: "bpausebutton",
               child: Icon(Icons.play_arrow_rounded, color: white, size: 40),
               onPressed: pageManager.play,
               foregroundColor: Colors.black,
@@ -297,6 +313,7 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.playing:
             return FloatingActionButton(
+              heroTag: "bplaybutton",
               child: Icon(
                 Icons.pause_rounded,
                 color: white,

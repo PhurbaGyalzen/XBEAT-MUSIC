@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:xbeat/pages/root_app.dart';
+import 'package:xbeat/pages/login.dart';
 import 'package:flutter/services.dart';
 import './services/service_locator.dart';
+import 'package:get/get.dart';
 
-void main() async{
+void main() async {
   await setupServiceLocator();
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(MaterialApp(
+  runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    home: RootApp(),
+    home: LoginScreen(),
   ));
 }

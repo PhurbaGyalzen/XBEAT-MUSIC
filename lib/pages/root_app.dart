@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:xbeat/pages/home.dart';
-import 'package:xbeat/pages/just_play.dart';
+// import 'package:xbeat/pages/login.dart';
 import 'package:xbeat/pages/steaming.dart';
+import 'package:xbeat/pages/miniplayer.dart';
 import '../theme/colors.dart';
+import 'package:get/get.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -20,7 +22,8 @@ class _RootAppState extends State<RootApp> {
       backgroundColor: Colors.black,
       body: SafeArea(child: getBody()),
       resizeToAvoidBottomInset: false,
-      bottomNavigationBar: _getNavigationBar(),
+      bottomNavigationBar: _getNavigationBar(
+      ),
     );
   }
 
@@ -31,7 +34,7 @@ class _RootAppState extends State<RootApp> {
         Home(),
         Search(),
         StreamApp(),
-        MyPlayer(),
+        Search(),
       ],
     );
   }
@@ -81,9 +84,14 @@ class Search extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        child: Text(
-          "Search",
-          style: TextStyle(color: white),
+        child: GestureDetector(
+          onTap: () {
+            Get.to(TestScreen());
+          },
+          child: Text(
+            "Search",
+            style: TextStyle(color: white),
+          ),
         ),
       ),
     );

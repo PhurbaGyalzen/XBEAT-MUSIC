@@ -79,11 +79,13 @@ class MyAudioHandler extends BaseAudioHandler {
       if (_player.shuffleModeEnabled) {
         index = _player.shuffleIndices![index];
       }
-      final oldMediaItem = newQueue[index];
-      final newMediaItem = oldMediaItem.copyWith(duration: duration);
-      newQueue[index] = newMediaItem;
-      queue.add(newQueue);
-      mediaItem.add(newMediaItem);
+      if (newQueue.isNotEmpty) {
+        final oldMediaItem = newQueue[index];
+        final newMediaItem = oldMediaItem.copyWith(duration: duration);
+        newQueue[index] = newMediaItem;
+        queue.add(newQueue);
+        mediaItem.add(newMediaItem);
+      }
     });
   }
 
@@ -124,12 +126,14 @@ class MyAudioHandler extends BaseAudioHandler {
     final audioSource = mediaItems.map(_createAudioSource);
     _playlist.clear();
     _playlist.addAll(audioSource.toList());
+    print(_playlist.length);
     await _player.setAudioSource(_playlist);
 
     // notify system
     final newQueue = queue.value
       ..clear()
       ..addAll(mediaItems);
+    print(newQueue.length);
     queue.add(newQueue);
   }
 
