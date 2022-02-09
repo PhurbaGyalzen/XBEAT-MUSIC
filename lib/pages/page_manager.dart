@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+// import 'package:just_audio/just_audio.dart';
+import "package:flutter/foundation.dart";
 
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_button_notifier.dart';
+import '../services/playlist_repository.dart';
+import 'package:audio_service/audio_service.dart';
+import '../services/service_locator.dart';
 
 class PageManager {
+  // Listeners: Updates going to the UI
+  final _audioHandler = getIt<AudioHandler>();
   final currentSongTitleNotifier = ValueNotifier<String>('');
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
@@ -14,60 +20,65 @@ class PageManager {
   final playButtonNotifier = PlayButtonNotifier();
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
-  late ConcatenatingAudioSource _playlist;
 
-  late AudioPlayer _audioPlayer;
-
-  PageManager() {
-    _init();
+  // Events: Calls coming from the UI
+  void init() async {
+    await _loadPlaylist();
+    _listenToChangesInPlaylist();
+    _listenToPlaybackState();
+    _listenToCurrentPosition();
+    _listenToBufferedPosition();
+    _listenToTotalDuration();
+    _listenToChangesInSong();
   }
 
-  void _init() async {
-    _audioPlayer = AudioPlayer();
-    _setInitialPlaylist();
-    _listenForChangesInPlayerState();
-    _listenForChangesInPlayerPosition();
-    _listenForChangesInBufferedPosition();
-    _listenForChangesInTotalDuration();
-    _listenForChangesInSequenceState();
+  Future<void> _loadPlaylist() async {
+    final songRepository = getIt<PlaylistRepository>();
+    final playlist = await songRepository.fetchInitialPlaylist();
+    final mediaItems = playlist
+        .map((song) => MediaItem(
+              id: song['id'] ?? '',
+              album: song['album'] ?? '',
+              title: song['title'] ?? '',
+              extras: {'url': song['url']},
+            ))
+        .toList();
+    _audioHandler.addQueueItems(mediaItems);
   }
 
-  // TODO: set playlist
-  void _setInitialPlaylist() async {
-    const prefix = 'https://www.soundhelix.com/examples/mp3';
-    final song1 = Uri.parse('$prefix/SoundHelix-Song-1.mp3');
-    final song2 = Uri.parse(
-        'http://192.168.1.17:3000/stream/song/Real Friends - CAMILA CABELLO ft SWAE LEE.mp3');
-    final song3 = Uri.parse(
-        'http://192.168.1.17:3000/stream/song/indie-folk-king-around-here-15045.mp3');
-    _playlist = ConcatenatingAudioSource(children: [
-      AudioSource.uri(song1, tag: 'Sound Hlex'),
-      AudioSource.uri(song2, tag: 'Real Friends'),
-      AudioSource.uri(song3, tag: 'Around Here'),
-    ]);
-    await _audioPlayer.setAudioSource(_playlist);
+  void _listenToChangesInPlaylist() {
+    _audioHandler.queue.listen((playlist) {
+      if (playlist.isEmpty) {
+        playlistNotifier.value = [];
+        currentSongTitleNotifier.value = '';
+      } else {
+        final newList = playlist.map((item) => item.title).toList();
+        playlistNotifier.value = newList;
+      }
+      _updateSkipButtons();
+    });
   }
 
-  void _listenForChangesInPlayerState() {
-    _audioPlayer.playerStateStream.listen((playerState) {
-      final isPlaying = playerState.playing;
-      final processingState = playerState.processingState;
-      if (processingState == ProcessingState.loading ||
-          processingState == ProcessingState.buffering) {
+  void _listenToPlaybackState() {
+    _audioHandler.playbackState.listen((playbackState) {
+      final isPlaying = playbackState.playing;
+      final processingState = playbackState.processingState;
+      if (processingState == AudioProcessingState.loading ||
+          processingState == AudioProcessingState.buffering) {
         playButtonNotifier.value = ButtonState.loading;
       } else if (!isPlaying) {
         playButtonNotifier.value = ButtonState.paused;
-      } else if (processingState != ProcessingState.completed) {
+      } else if (processingState != AudioProcessingState.completed) {
         playButtonNotifier.value = ButtonState.playing;
       } else {
-        _audioPlayer.seek(Duration.zero);
-        _audioPlayer.pause();
+        _audioHandler.seek(Duration.zero);
+        _audioHandler.pause();
       }
     });
   }
 
-  void _listenForChangesInPlayerPosition() {
-    _audioPlayer.positionStream.listen((position) {
+  void _listenToCurrentPosition() {
+    AudioService.position.listen((position) {
       final oldState = progressNotifier.value;
       progressNotifier.value = ProgressBarState(
         current: position,
@@ -77,109 +88,104 @@ class PageManager {
     });
   }
 
-  void _listenForChangesInBufferedPosition() {
-    _audioPlayer.bufferedPositionStream.listen((bufferedPosition) {
+  void _listenToBufferedPosition() {
+    _audioHandler.playbackState.listen((playbackState) {
       final oldState = progressNotifier.value;
       progressNotifier.value = ProgressBarState(
         current: oldState.current,
-        buffered: bufferedPosition,
+        buffered: playbackState.bufferedPosition,
         total: oldState.total,
       );
     });
   }
 
-  void _listenForChangesInTotalDuration() {
-    _audioPlayer.durationStream.listen((totalDuration) {
+  void _listenToTotalDuration() {
+    _audioHandler.mediaItem.listen((mediaItem) {
       final oldState = progressNotifier.value;
       progressNotifier.value = ProgressBarState(
         current: oldState.current,
         buffered: oldState.buffered,
-        total: totalDuration ?? Duration.zero,
+        total: mediaItem?.duration ?? Duration.zero,
       );
     });
   }
 
-  void _listenForChangesInSequenceState() {
-    _audioPlayer.sequenceStateStream.listen((sequenceState) {
-      if (sequenceState == null) return;
-      // TODO: update current song title
-      final currentItem = sequenceState.currentSource;
-      final title = currentItem?.tag as String?;
-      currentSongTitleNotifier.value = title ?? '';
-      // TODO: update playlist
-      final playlist = sequenceState.effectiveSequence;
-      print(playlist);
-      final titles = playlist.map((item) => item.tag as String).toList();
-      playlistNotifier.value = titles;
-      // TODO: update shuffle mode
-      isShuffleModeEnabledNotifier.value = sequenceState.shuffleModeEnabled;
-      // TODO: update previous and next buttons
-      if (playlist.isEmpty || currentItem == null) {
-        isFirstSongNotifier.value = true;
-        isLastSongNotifier.value = true;
-      } else {
-        isFirstSongNotifier.value = playlist.first == currentItem;
-        isLastSongNotifier.value = playlist.last == currentItem;
-      }
+  void _listenToChangesInSong() {
+    _audioHandler.mediaItem.listen((mediaItem) {
+      currentSongTitleNotifier.value = mediaItem?.title ?? '';
+      _updateSkipButtons();
     });
   }
 
-  void play() async {
-    _audioPlayer.play();
+  void _updateSkipButtons() {
+    final mediaItem = _audioHandler.mediaItem.value;
+    final playlist = _audioHandler.queue.value;
+    if (playlist.length < 2 || mediaItem == null) {
+      isFirstSongNotifier.value = true;
+      isLastSongNotifier.value = true;
+    } else {
+      isFirstSongNotifier.value = playlist.first == mediaItem;
+      isLastSongNotifier.value = playlist.last == mediaItem;
+    }
   }
 
-  void pause() {
-    _audioPlayer.pause();
+  void play() => _audioHandler.play();
+  void pause() => _audioHandler.pause();
+
+  void seek(Duration position) => _audioHandler.seek(position);
+
+  void previous() => _audioHandler.skipToPrevious();
+  void next() => _audioHandler.skipToNext();
+
+  void repeat() {
+    repeatButtonNotifier.nextState();
+    final repeatMode = repeatButtonNotifier.value;
+    switch (repeatMode) {
+      case RepeatState.off:
+        _audioHandler.setRepeatMode(AudioServiceRepeatMode.none);
+        break;
+      case RepeatState.repeatSong:
+        _audioHandler.setRepeatMode(AudioServiceRepeatMode.one);
+        break;
+      case RepeatState.repeatPlaylist:
+        _audioHandler.setRepeatMode(AudioServiceRepeatMode.all);
+        break;
+    }
   }
 
-  void seek(Duration position) {
-    _audioPlayer.seek(position);
+  void shuffle() {
+    final enable = !isShuffleModeEnabledNotifier.value;
+    isShuffleModeEnabledNotifier.value = enable;
+    if (enable) {
+      _audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
+    } else {
+      _audioHandler.setShuffleMode(AudioServiceShuffleMode.none);
+    }
+  }
+
+  Future<void> add() async {
+    final songRepository = getIt<PlaylistRepository>();
+    final song = await songRepository.fetchAnotherSong();
+    final mediaItem = MediaItem(
+      id: song['id'] ?? '',
+      album: song['album'] ?? '',
+      title: song['title'] ?? '',
+      extras: {'url': song['url']},
+    );
+    _audioHandler.addQueueItem(mediaItem);
+  }
+
+  void remove() {
+    final lastIndex = _audioHandler.queue.value.length - 1;
+    if (lastIndex < 0) return;
+    _audioHandler.removeQueueItemAt(lastIndex);
   }
 
   void dispose() {
-    _audioPlayer.dispose();
+    _audioHandler.customAction('dispose');
   }
 
-  void onRepeatButtonPressed() {
-    repeatButtonNotifier.nextState();
-    switch (repeatButtonNotifier.value) {
-      case RepeatState.off:
-        _audioPlayer.setLoopMode(LoopMode.off);
-        break;
-      case RepeatState.repeatSong:
-        _audioPlayer.setLoopMode(LoopMode.one);
-        break;
-      case RepeatState.repeatPlaylist:
-        _audioPlayer.setLoopMode(LoopMode.all);
-    }
-  }
-
-  void onPreviousSongButtonPressed() {
-    _audioPlayer.seekToPrevious();
-  }
-
-  void onNextSongButtonPressed() {
-    _audioPlayer.seekToNext();
-  }
-
-  void onShuffleButtonPressed() async {
-    final enable = !_audioPlayer.shuffleModeEnabled;
-    if (enable) {
-      await _audioPlayer.shuffle();
-    }
-    await _audioPlayer.setShuffleModeEnabled(enable);
-  }
-
-  void addSong() {
-    final songNumber = _playlist.length + 1;
-    const prefix = 'https://www.soundhelix.com/examples/mp3';
-    final song = Uri.parse('$prefix/SoundHelix-Song-$songNumber.mp3');
-    _playlist.add(AudioSource.uri(song, tag: 'Song $songNumber'));
-  }
-
-  void removeSong() {
-    final index = _playlist.length - 1;
-    if (index < 0) return;
-    _playlist.removeAt(index);
+  void stop() {
+    _audioHandler.stop();
   }
 }

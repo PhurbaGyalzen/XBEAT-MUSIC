@@ -5,6 +5,7 @@ import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_button_notifier.dart';
 import '../theme/colors.dart';
+import '../services/service_locator.dart';
 
 class StreamApp extends StatefulWidget {
   const StreamApp({Key? key}) : super(key: key);
@@ -13,20 +14,16 @@ class StreamApp extends StatefulWidget {
   _StreamAppState createState() => _StreamAppState();
 }
 
-// use GetIt or Provider rather than a global variable in a real project
-late final PageManager _pageManager;
-
 class _StreamAppState extends State<StreamApp> {
   @override
   void initState() {
     super.initState();
-
-    _pageManager = PageManager();
+    getIt<PageManager>().init();
   }
 
   @override
   void dispose() {
-    _pageManager.dispose();
+    getIt<PageManager>().dispose();
     super.dispose();
   }
 
@@ -95,8 +92,9 @@ class CurrentSongTitle extends StatelessWidget {
   const CurrentSongTitle({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<String>(
-      valueListenable: _pageManager.currentSongTitleNotifier,
+      valueListenable: pageManager.currentSongTitleNotifier,
       builder: (_, title, __) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -132,18 +130,16 @@ class Playlist extends StatelessWidget {
   const Playlist({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return Expanded(
       child: ValueListenableBuilder<List<String>>(
-        valueListenable: _pageManager.playlistNotifier,
+        valueListenable: pageManager.playlistNotifier,
         builder: (context, playlistTitles, _) {
           return ListView.builder(
             itemCount: playlistTitles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(
-                  '${playlistTitles[index]}',
-                  style: TextStyle(color: Colors.white),
-                ),
+                title: Text('${playlistTitles[index]}'),
               );
             },
           );
@@ -157,17 +153,18 @@ class AddRemoveSongButtons extends StatelessWidget {
   const AddRemoveSongButtons({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FloatingActionButton(
-            onPressed: _pageManager.addSong,
+            onPressed: pageManager.add,
             child: Icon(Icons.add),
           ),
           FloatingActionButton(
-            onPressed: _pageManager.removeSong,
+            onPressed: pageManager.remove,
             child: Icon(Icons.remove),
           ),
         ],
@@ -180,14 +177,15 @@ class AudioProgressBar extends StatelessWidget {
   const AudioProgressBar({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<ProgressBarState>(
-      valueListenable: _pageManager.progressNotifier,
+      valueListenable: pageManager.progressNotifier,
       builder: (_, value, __) {
         return ProgressBar(
           progress: value.current,
           buffered: value.buffered,
           total: value.total,
-          onSeek: _pageManager.seek,
+          onSeek: pageManager.seek,
           progressBarColor: primary,
           thumbColor: primary,
           timeLabelTextStyle: TextStyle(color: Colors.grey[400]),
@@ -222,8 +220,9 @@ class RepeatButton extends StatelessWidget {
   const RepeatButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<RepeatState>(
-      valueListenable: _pageManager.repeatButtonNotifier,
+      valueListenable: pageManager.repeatButtonNotifier,
       builder: (context, value, child) {
         Icon icon;
         switch (value) {
@@ -239,7 +238,7 @@ class RepeatButton extends StatelessWidget {
         }
         return IconButton(
           icon: icon,
-          onPressed: _pageManager.onRepeatButtonPressed,
+          onPressed: pageManager.repeat,
         );
       },
     );
@@ -250,16 +249,16 @@ class PreviousSongButton extends StatelessWidget {
   const PreviousSongButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<bool>(
-      valueListenable: _pageManager.isFirstSongNotifier,
+      valueListenable: pageManager.isFirstSongNotifier,
       builder: (_, isFirst, __) {
         return Padding(
           padding: const EdgeInsets.only(right: 10.0),
           child: IconButton(
             icon: Icon(Icons.skip_previous_rounded,
                 color: isFirst ? Colors.grey : Colors.white, size: 45),
-            onPressed:
-                (isFirst) ? null : _pageManager.onPreviousSongButtonPressed,
+            onPressed: (isFirst) ? null : pageManager.previous,
           ),
         );
       },
@@ -271,8 +270,9 @@ class PlayButton extends StatelessWidget {
   const PlayButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<ButtonState>(
-      valueListenable: _pageManager.playButtonNotifier,
+      valueListenable: pageManager.playButtonNotifier,
       builder: (_, value, __) {
         switch (value) {
           case ButtonState.loading:
@@ -285,7 +285,7 @@ class PlayButton extends StatelessWidget {
           case ButtonState.paused:
             return FloatingActionButton(
               child: Icon(Icons.play_arrow_rounded, color: white, size: 40),
-              onPressed: _pageManager.play,
+              onPressed: pageManager.play,
               foregroundColor: Colors.black,
               backgroundColor: primary,
             );
@@ -296,7 +296,7 @@ class PlayButton extends StatelessWidget {
                 color: white,
                 size: 40,
               ),
-              onPressed: _pageManager.pause,
+              onPressed: pageManager.pause,
               foregroundColor: Colors.black,
               backgroundColor: primary,
             );
@@ -310,8 +310,9 @@ class NextSongButton extends StatelessWidget {
   const NextSongButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<bool>(
-      valueListenable: _pageManager.isLastSongNotifier,
+      valueListenable: pageManager.isLastSongNotifier,
       builder: (_, isLast, __) {
         return IconButton(
           icon: Icon(
@@ -319,7 +320,7 @@ class NextSongButton extends StatelessWidget {
             color: isLast ? Colors.grey : Colors.white,
             size: 45,
           ),
-          onPressed: (isLast) ? null : _pageManager.onNextSongButtonPressed,
+          onPressed: (isLast) ? null : pageManager.next,
         );
       },
     );
@@ -330,8 +331,9 @@ class ShuffleButton extends StatelessWidget {
   const ShuffleButton({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<bool>(
-      valueListenable: _pageManager.isShuffleModeEnabledNotifier,
+      valueListenable: pageManager.isShuffleModeEnabledNotifier,
       builder: (context, isEnabled, child) {
         return IconButton(
           icon: (isEnabled)
@@ -340,7 +342,7 @@ class ShuffleButton extends StatelessWidget {
                   color: Colors.blue,
                 )
               : Icon(Icons.shuffle_outlined, color: Colors.grey),
-          onPressed: _pageManager.onShuffleButtonPressed,
+          onPressed: pageManager.shuffle,
         );
       },
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:xbeat/pages/home.dart';
-import 'package:xbeat/pages/player.dart';
 import 'package:xbeat/pages/just_play.dart';
 import 'package:xbeat/pages/steaming.dart';
+import '../theme/colors.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _RootAppState extends State<RootApp> {
       index: activeTab,
       children: [
         Home(),
-        AudioScreen(),
+        Search(),
         StreamApp(),
         MyPlayer(),
       ],
@@ -63,13 +63,29 @@ class _RootAppState extends State<RootApp> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'List',
+            icon: Icon(Icons.music_note),
+            label: 'Player',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ]);
+  }
+}
+
+class Search extends StatelessWidget {
+  const Search({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Text(
+          "Search",
+          style: TextStyle(color: white),
+        ),
+      ),
+    );
   }
 }
