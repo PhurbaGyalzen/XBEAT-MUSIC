@@ -38,32 +38,41 @@ class MiniPlayer extends StatelessWidget {
   const MiniPlayer({
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      ListTile(
-        tileColor: black,
-        dense: true,
-        leading: Image.asset("assets/login.png"),
-        title: Text(
-          "Playing",
-          style: TextStyle(fontSize: 15, color: white),
-        ),
-        onTap: () {
-          Get.to(StreamApp());
-        },
-        subtitle: Text(
-          "Song description",
-          style: TextStyle(color: white, fontSize: 10),
-        ),
-        trailing: PlayButton(),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 15.0, right: 15),
-        child: AudioProgressBar(),
-      ),
-    ]);
+    final pageManager = getIt<PageManager>();
+    return ValueListenableBuilder<String>(
+      valueListenable: pageManager.currentSongTitleNotifier,
+      builder: (_, title, __) {
+        return Column(children: [
+          ListTile(
+            tileColor: black,
+            dense: true,
+            leading: Image.asset("assets/login.png"),
+            title: Text(
+              title,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.bold,
+                color: white,
+              ),
+            ),
+            onTap: () {
+              Get.to(StreamApp());
+            },
+            subtitle: Text(
+              "Song description",
+              style: TextStyle(color: white, fontSize: 10),
+            ),
+            trailing: PlayButton(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, right: 15),
+            child: AudioProgressBar(),
+          ),
+        ]);
+      },
+    );
   }
 }
 
@@ -127,7 +136,7 @@ class AudioProgressBar extends StatelessWidget {
           progressBarColor: primary,
           timeLabelLocation: TimeLabelLocation.none,
           timeLabelTextStyle: TextStyle(color: Colors.grey[400]),
-          barHeight: 1.0,
+          barHeight: 2.0,
         );
       },
     );

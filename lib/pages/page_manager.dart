@@ -23,7 +23,7 @@ class PageManager {
 
   // Events: Calls coming from the UI
   void init() async {
-    await _loadPlaylist();
+    // await _loadPlaylist();
     _listenToChangesInPlaylist();
     _listenToPlaybackState();
     _listenToCurrentPosition();
@@ -32,19 +32,19 @@ class PageManager {
     _listenToChangesInSong();
   }
 
-  Future<void> _loadPlaylist() async {
-    final songRepository = getIt<PlaylistRepository>();
-    final playlist = await songRepository.fetchInitialPlaylist();
-    final mediaItems = playlist
-        .map((song) => MediaItem(
-              id: song['id'] ?? '',
-              album: song['album'] ?? '',
-              title: song['title'] ?? '',
-              extras: {'url': song['url']},
-            ))
-        .toList();
-    _audioHandler.addQueueItems(mediaItems);
-  }
+  // Future<void> _loadPlaylist() async {
+  //   final songRepository = getIt<PlaylistRepository>();
+  //   final playlist = await songRepository.fetchInitialPlaylist();
+  //   final mediaItems = playlist
+  //       .map((song) => MediaItem(
+  //             id: song['id'] ?? '',
+  //             album: song['album'] ?? '',
+  //             title: song['title'] ?? '',
+  //             extras: {'url': song['url']},
+  //           ))
+  //       .toList();
+  //   _audioHandler.addQueueItems(mediaItems);
+  // }
 
   // Load new playlist
   Future<void> loadNewPlaylist() async {
