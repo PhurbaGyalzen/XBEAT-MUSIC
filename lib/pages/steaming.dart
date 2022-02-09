@@ -81,6 +81,12 @@ class _StreamAppState extends State<StreamApp> {
             AudioProgressBar(),
             AudioControlButtons(),
             SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                getIt<PageManager>().loadNewPlaylist();
+              },
+              child: Text(" Play New Playlist"),
+            )
           ],
         ),
       ),

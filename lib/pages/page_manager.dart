@@ -46,6 +46,21 @@ class PageManager {
     _audioHandler.addQueueItems(mediaItems);
   }
 
+  // Load new playlist
+  Future<void> loadNewPlaylist() async {
+    final songRepository = getIt<PlaylistRepository>();
+    final playlist = await songRepository.fetchNextPlaylist();
+    final mediaItems = playlist
+        .map((song) => MediaItem(
+              id: song['id'] ?? '',
+              album: song['album'] ?? '',
+              title: song['title'] ?? '',
+              extras: {'url': song['url']},
+            ))
+        .toList();
+    _audioHandler.updateQueue(mediaItems);
+  }
+
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) {
