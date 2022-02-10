@@ -38,7 +38,10 @@ class _StreamAppState extends State<StreamApp> {
             onPressed: () {
               Get.back();
             },
-            icon: Icon(Icons.arrow_downward_rounded)),
+            icon: Icon(
+              Icons.keyboard_arrow_down_sharp,
+              size: 40,
+            )),
       ),
       backgroundColor: black,
       body: Container(
@@ -64,21 +67,18 @@ class _StreamAppState extends State<StreamApp> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30, right: 30, top: 20),
-                    child: Container(
-                      width: size.width - 60,
-                      height: size.width - 60,
-                      decoration: BoxDecoration(
+                      padding:
+                          const EdgeInsets.only(left: 30, right: 30, top: 20),
+                      child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              "http://192.168.1.17:3000/images/default-profile.jpg"),
+                        child: FadeInImage.assetNetwork(
+                          image: "http://192.168.1.17:3000/images/default-profile.jpg",
+                          placeholder: "assets/splash2.png",
+                          width: size.width - 60,
+                          height: size.width - 60,
                           fit: BoxFit.cover,
                         ),
-                      ),
-                    ),
-                  ),
+                      )),
                 ],
               ),
               SizedBox(
@@ -305,7 +305,6 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.paused:
             return FloatingActionButton(
-              heroTag: "bpausebutton",
               child: Icon(Icons.play_arrow_rounded, color: white, size: 40),
               onPressed: pageManager.play,
               foregroundColor: Colors.black,
@@ -313,7 +312,6 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.playing:
             return FloatingActionButton(
-              heroTag: "bplaybutton",
               child: Icon(
                 Icons.pause_rounded,
                 color: white,

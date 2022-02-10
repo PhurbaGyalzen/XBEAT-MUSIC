@@ -48,7 +48,7 @@ class MiniPlayer extends StatelessWidget {
           ListTile(
             tileColor: black,
             dense: true,
-            leading: Image.asset("assets/login.png"),
+            leading: Image.network("http://192.168.1.17:3000/images/default-profile.jpg"),
             title: Text(
               title,
               style: TextStyle(
@@ -96,7 +96,6 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.paused:
             return FloatingActionButton(
-              heroTag: "spausebutton",
               child: Icon(Icons.play_arrow_rounded, color: primary, size: 40),
               onPressed: pageManager.play,
               foregroundColor: Colors.black,
@@ -104,7 +103,6 @@ class PlayButton extends StatelessWidget {
             );
           case ButtonState.playing:
             return FloatingActionButton(
-              heroTag: "splaybutton",
               child: Icon(
                 Icons.pause_rounded,
                 color: primary,

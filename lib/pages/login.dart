@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:xbeat/pages/artist_register.dart';
 import 'package:xbeat/pages/root_app.dart';
 import "../theme/colors.dart";
 import "package:get/get.dart";
@@ -130,11 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text("Don't have an account? "),
                           GestureDetector(
                             onTap: () {
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             RegistrationScreen()));
+                              Get.to(RegistrationScreen());
                             },
                             child: Text(
                               "SignUp",

@@ -33,7 +33,7 @@ class _RootAppState extends State<RootApp> {
       children: [
         Home(),
         Search(),
-        StreamApp(),
+        Search(),
         Search(),
       ],
     );
