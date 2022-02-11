@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:xbeat/pages/root_app.dart';
+import 'package:xbeat/theme/colors.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({Key? key}) : super(key: key);
@@ -8,6 +11,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  bool hiddenPassword = true;
+  bool hiddenPassword2 = true;
   // string for displaying the error Message
   String? errorMessage;
 
@@ -27,6 +32,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         autofocus: false,
         controller: firstNameEditingController,
         keyboardType: TextInputType.name,
+        cursorColor: black,
         validator: (value) {
           RegExp regex = new RegExp(r'^.{3,}$');
           if (value!.isEmpty) {
@@ -43,6 +49,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.account_circle),
+          fillColor: white,
+          filled: true,
+          hintStyle: TextStyle(color: black),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "First Name",
           border: OutlineInputBorder(
@@ -55,6 +64,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         autofocus: false,
         controller: secondNameEditingController,
         keyboardType: TextInputType.name,
+        cursorColor: black,
         validator: (value) {
           if (value!.isEmpty) {
             return ("Second Name cannot be Empty");
@@ -68,6 +78,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.account_circle),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+          fillColor: white,
+          filled: true,
+          hintStyle: TextStyle(color: black),
           hintText: "Second Name",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -79,6 +92,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         autofocus: false,
         controller: emailEditingController,
         keyboardType: TextInputType.emailAddress,
+        cursorColor: black,
         validator: (value) {
           if (value!.isEmpty) {
             return ("Please Enter Your Email");
@@ -98,6 +112,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Email",
+          fillColor: white,
+          filled: true,
+          hintStyle: TextStyle(color: black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -107,7 +124,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final passwordField = TextFormField(
         autofocus: false,
         controller: passwordEditingController,
-        obscureText: true,
+        obscureText: hiddenPassword,
+        cursorColor: black,
         validator: (value) {
           RegExp regex = new RegExp(r'^.{6,}$');
           if (value!.isEmpty) {
@@ -123,10 +141,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
+          fillColor: white,
+          filled: true,
+          hintStyle: TextStyle(color: black),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                hiddenPassword = !hiddenPassword;
+              });
+            },
+            color: grey.withOpacity(0.6),
+            icon:
+                Icon(hiddenPassword ? Icons.visibility_off : Icons.visibility),
           ),
         ));
 
@@ -134,7 +165,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final confirmPasswordField = TextFormField(
         autofocus: false,
         controller: confirmPasswordEditingController,
-        obscureText: true,
+        obscureText: hiddenPassword2,
+        cursorColor: black,
         validator: (value) {
           if (confirmPasswordEditingController.text !=
               passwordEditingController.text) {
@@ -148,10 +180,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.vpn_key),
+          fillColor: white,
+          filled: true,
+          hintStyle: TextStyle(color: black),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Confirm Password",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                hiddenPassword2 = !hiddenPassword2;
+              });
+            },
+            color: grey.withOpacity(0.6),
+            icon:
+                Icon(hiddenPassword2 ? Icons.visibility_off : Icons.visibility),
           ),
         ));
 
@@ -159,7 +204,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     final signUpButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: Colors.redAccent,
+      color: primary,
       child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
@@ -175,7 +220,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -190,7 +235,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.white,
+            color: black,
             child: Padding(
               padding: const EdgeInsets.all(36.0),
               child: Form(
@@ -201,9 +246,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: <Widget>[
                     SizedBox(
                         height: 180,
-                        child: Image.asset(
-                          "assets/login.png",
-                          fit: BoxFit.contain,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            "assets/logo2.png",
+                            fit: BoxFit.contain,
+                          ),
                         )),
                     SizedBox(height: 45),
                     firstNameField,
@@ -229,6 +277,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void signUp(String email, String password) async {
-    if (_formKey.currentState!.validate()) {}
+    if (_formKey.currentState!.validate()) {
+      Get.to(RootApp());
+    }
   }
 }

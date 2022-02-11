@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:xbeat/pages/miniplayer.dart';
-import 'package:xbeat/theme/colors.dart';
 
 // import './player.dart';
 // import 'package:get/get.dart';

@@ -74,7 +74,8 @@ class _StreamAppState extends State<StreamApp> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: FadeInImage.assetNetwork(
-                            image: "http://192.168.1.17:3000/images/default-profile.jpg",
+                            image:
+                                "http://192.168.1.17:3000/images/default-profile.jpg",
                             placeholder: "assets/giphy.gif",
                             width: size.width - 60,
                             height: size.width - 60,
@@ -93,13 +94,16 @@ class _StreamAppState extends State<StreamApp> {
                 // AddRemoveSongButtons(),
                 AudioProgressBar(),
                 AudioControlButtons(),
-                SizedBox(height: 40),
+                SizedBox(
+                  height: 150,
+                  child: Playlist(),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     getIt<PageManager>().loadNewPlaylist();
                   },
                   child: Text(" Play New Playlist"),
-                )
+                ),
               ],
             ),
           ),
@@ -160,7 +164,10 @@ class Playlist extends StatelessWidget {
             itemCount: playlistTitles.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text('${playlistTitles[index]}'),
+                title: Text(
+                  '${playlistTitles[index]}',
+                  style: TextStyle(color: white),
+                ),
               );
             },
           );

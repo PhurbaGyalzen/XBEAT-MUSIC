@@ -20,6 +20,7 @@ class PageManager {
   final playButtonNotifier = PlayButtonNotifier();
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+  // final isPlayerLoaded = ValueNotifier<bool>(false);
 
   // Events: Calls coming from the UI
   void init() async {
@@ -33,17 +34,20 @@ class PageManager {
   }
 
   // Future<void> _loadPlaylist() async {
-  //   final songRepository = getIt<PlaylistRepository>();
-  //   final playlist = await songRepository.fetchInitialPlaylist();
-  //   final mediaItems = playlist
-  //       .map((song) => MediaItem(
-  //             id: song['id'] ?? '',
-  //             album: song['album'] ?? '',
-  //             title: song['title'] ?? '',
-  //             extras: {'url': song['url']},
-  //           ))
-  //       .toList();
-  //   _audioHandler.addQueueItems(mediaItems);
+  //   if (!isPlayerLoaded.value) {
+  //     final songRepository = getIt<PlaylistRepository>();
+  //     final playlist = await songRepository.fetchInitialPlaylist();
+  //     final mediaItems = playlist
+  //         .map((song) => MediaItem(
+  //               id: song['id'] ?? '',
+  //               album: song['album'] ?? '',
+  //               title: song['title'] ?? '',
+  //               extras: {'url': song['url']},
+  //             ))
+  //         .toList();
+  //     _audioHandler.addQueueItems(mediaItems);
+  //   }
+  //   isPlayerLoaded.value = true;
   // }
 
   // Load new playlist
@@ -58,6 +62,7 @@ class PageManager {
               extras: {'url': song['url']},
             ))
         .toList();
+
     _audioHandler.updateQueue(mediaItems);
   }
 

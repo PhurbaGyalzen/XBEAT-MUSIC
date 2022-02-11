@@ -126,15 +126,16 @@ class MyAudioHandler extends BaseAudioHandler {
     final audioSource = mediaItems.map(_createAudioSource);
     _playlist.clear();
     _playlist.addAll(audioSource.toList());
-    print(_playlist.length);
+    print("playlist " + _playlist.length.toString());
     await _player.setAudioSource(_playlist);
 
     // notify system
     final newQueue = queue.value
       ..clear()
       ..addAll(mediaItems);
-    print(newQueue.length);
-    queue.add(newQueue);
+    print("Queue Items" + newQueue.length.toString());
+    queue.add(queue.value..replaceRange(0, queue.value.length, mediaItems));
+    await super.updateQueue(mediaItems);
   }
 
   @override

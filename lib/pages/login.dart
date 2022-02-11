@@ -12,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool hiddenPassword = true;
   // form key
   final _formKey = GlobalKey<FormState>();
 
@@ -27,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     //email field
     final emailField = TextFormField(
         autofocus: false,
+        style: TextStyle(color: black),
         controller: emailController,
         keyboardType: TextInputType.emailAddress,
         validator: (value) {
@@ -43,11 +45,15 @@ class _LoginScreenState extends State<LoginScreen> {
         onSaved: (value) {
           emailController.text = value!;
         },
+        cursorColor: black,
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
+          fillColor: white,
+          filled: true,
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Email",
+          hintStyle: TextStyle(color: black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -55,9 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
     //password field
     final passwordField = TextFormField(
+        style: TextStyle(
+          color: black,
+        ),
         autofocus: false,
         controller: passwordController,
-        obscureText: true,
+        cursorColor: black,
+        obscureText: hiddenPassword,
         validator: (value) {
           RegExp regex = new RegExp(r'^.{6,}$');
           if (value!.isEmpty) {
@@ -72,11 +82,24 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
+          fillColor: white,
+          filled: true,
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
+          hintStyle: TextStyle(color: black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                hiddenPassword = !hiddenPassword;
+              });
+            },
+            color: grey.withOpacity(0.6),
+            icon:
+                Icon(hiddenPassword ? Icons.visibility_off : Icons.visibility),
           ),
         ));
 
@@ -99,11 +122,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: black,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
-            color: Colors.white,
+            color: black,
             child: Padding(
               padding: const EdgeInsets.all(36.0),
               child: Form(
@@ -114,9 +137,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     SizedBox(
                         height: 200,
-                        child: Image.asset(
-                          "assets/splash3.png",
-                          fit: BoxFit.contain,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Image.asset(
+                            "assets/logo2.png",
+                            fit: BoxFit.contain,
+                          ),
                         )),
                     SizedBox(height: 45),
                     emailField,
@@ -128,7 +154,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("Don't have an account? "),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              "Don't have an account? ",
+                              style: TextStyle(color: white),
+                            ),
+                          ),
                           GestureDetector(
                             onTap: () {
                               Get.to(RegistrationScreen());
@@ -155,7 +187,18 @@ class _LoginScreenState extends State<LoginScreen> {
   // login function
   void signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-      Get.off(RootApp());
+      Get.off(() => RootApp());
+      Get.snackbar(
+        "Welcome",
+        "Thanks for joining again!!!",
+        icon: Icon(Icons.person_rounded, color: white),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.green[700],
+        colorText: white,
+        animationDuration: Duration(seconds: 3),
+        dismissDirection: DismissDirection.horizontal,
+        snackPosition: SnackPosition.TOP,
+      );
     }
   }
 }
