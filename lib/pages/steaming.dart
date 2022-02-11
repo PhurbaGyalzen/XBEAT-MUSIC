@@ -45,62 +45,63 @@ class _StreamAppState extends State<StreamApp> {
       ),
       backgroundColor: black,
       body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 30, right: 30, top: 20),
-                    child: Container(
-                      width: size.width - 100,
-                      height: size.width - 100,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: Color(0xFF04be4e),
-                            blurRadius: 50,
-                            spreadRadius: 5,
-                            offset: Offset(-10, 40))
-                      ], borderRadius: BorderRadius.circular(20)),
-                    ),
-                  ),
-                  Padding(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    Padding(
                       padding:
                           const EdgeInsets.only(left: 30, right: 30, top: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: FadeInImage.assetNetwork(
-                          image: "http://192.168.1.17:3000/images/default-profile.jpg",
-                          placeholder: "assets/splash2.png",
-                          width: size.width - 60,
-                          height: size.width - 60,
-                          fit: BoxFit.cover,
-                        ),
-                      )),
-                ],
-              ),
-              SizedBox(
-                height: 40,
-              ),
-              CurrentSongTitle(),
-              Expanded(
-                child: SizedBox(
+                      child: Container(
+                        width: size.width - 100,
+                        height: size.width - 100,
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              color: Color(0xFF04be4e),
+                              blurRadius: 50,
+                              spreadRadius: 5,
+                              offset: Offset(-10, 40))
+                        ], borderRadius: BorderRadius.circular(20)),
+                      ),
+                    ),
+                    Padding(
+                        padding:
+                            const EdgeInsets.only(left: 30, right: 30, top: 20),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: FadeInImage.assetNetwork(
+                            image: "http://192.168.1.17:3000/images/default-profile.jpg",
+                            placeholder: "assets/giphy.gif",
+                            width: size.width - 60,
+                            height: size.width - 60,
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                  ],
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                CurrentSongTitle(),
+                SizedBox(
                   height: 80,
                 ),
-              ),
-              // AddRemoveSongButtons(),
-              AudioProgressBar(),
-              AudioControlButtons(),
-              SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  getIt<PageManager>().loadNewPlaylist();
-                },
-                child: Text(" Play New Playlist"),
-              )
-            ],
+                // AddRemoveSongButtons(),
+                AudioProgressBar(),
+                AudioControlButtons(),
+                SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: () {
+                    getIt<PageManager>().loadNewPlaylist();
+                  },
+                  child: Text(" Play New Playlist"),
+                )
+              ],
+            ),
           ),
         ),
       ),
