@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:xbeat/pages/artist_register.dart';
 import 'package:xbeat/pages/root_app.dart';
+import 'package:xbeat/services/auth_service.dart';
 import "../theme/colors.dart";
 import "package:get/get.dart";
 
@@ -34,11 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
         validator: (value) {
           if (value!.isEmpty) {
             return ("Please Enter Your Email");
-          }
-          // reg expression for email validation
-          if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-              .hasMatch(value)) {
-            return ("Please Enter a valid email");
           }
           return null;
         },
@@ -187,18 +183,29 @@ class _LoginScreenState extends State<LoginScreen> {
   // login function
   void signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-      Get.off(() => RootApp());
-      Get.snackbar(
-        "Welcome",
-        "Thanks for joining again!!!",
-        icon: Icon(Icons.person_rounded, color: white),
-        duration: Duration(seconds: 3),
-        backgroundColor: Colors.green[700],
-        colorText: white,
-        animationDuration: Duration(seconds: 3),
-        dismissDirection: DismissDirection.horizontal,
-        snackPosition: SnackPosition.TOP,
-      );
+      var response = await AuthService.login(email, password);
+      if (response != null) {
+        Get.offAll(RootApp());
+        Get.snackbar("token", "${response.token}");
+        Get.snackbar(
+          "Welcome",
+          "Thanks for joining again!!!",
+          icon: Icon(Icons.person_rounded, color: white),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green[700],
+          colorText: white,
+          animationDuration: Duration(seconds: 2),
+          dismissDirection: DismissDirection.horizontal,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          "Cannot Login",
+          "Invalid Email or Password",
+          backgroundColor: Colors.red[900],
+          colorText: white,
+        );
+      }
     }
   }
 }
