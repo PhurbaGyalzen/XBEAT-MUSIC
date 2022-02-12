@@ -4,6 +4,7 @@ import 'package:xbeat/pages/root_app.dart';
 import 'package:xbeat/services/auth_service.dart';
 import "../theme/colors.dart";
 import "package:get/get.dart";
+import 'package:hive/hive.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -13,6 +14,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late final Box authbox;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+
+  void init() async {
+    // Get reference to an already opened box
+    authbox = await Hive.openBox('auth');
+  }
+
   bool hiddenPassword = true;
   // form key
   final _formKey = GlobalKey<FormState>();
@@ -186,7 +201,8 @@ class _LoginScreenState extends State<LoginScreen> {
       var response = await AuthService.login(email, password);
       if (response != null) {
         Get.offAll(RootApp());
-        Get.snackbar("token", "${response.token}");
+        authbox.put("token", response.token);
+        Get.snackbar("token", "${authbox.get('token')}");
         Get.snackbar(
           "Welcome",
           "Thanks for joining again!!!",
@@ -205,6 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.red[900],
           colorText: white,
         );
+        Get.snackbar("Token", authbox.get("token"));
       }
     }
   }

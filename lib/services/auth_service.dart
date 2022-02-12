@@ -27,15 +27,18 @@ class LoginResponse {
     required this.token,
     required this.role,
     required this.message,
+    required this.user_id,
   });
 
   String message;
   String token;
   String role;
+  String user_id;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
         message: json["message"],
         token: json["token"],
+        user_id: json["user_id"],
         role: json["role"],
       );
 
@@ -43,5 +46,6 @@ class LoginResponse {
         "message": message,
         "token": token,
         "role": role,
+        "user_id": user_id,
       };
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:xbeat/pages/home.dart';
 // import 'package:xbeat/pages/login.dart';
 import 'package:xbeat/pages/miniplayer.dart';
+import 'package:xbeat/pages/ownprofile.dart';
 import '../theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class _RootAppState extends State<RootApp> {
         Home(),
         Search(),
         Search(),
-        Search(),
+        MyProfile(),
       ],
     );
   }

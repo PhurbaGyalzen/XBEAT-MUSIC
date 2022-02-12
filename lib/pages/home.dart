@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:xbeat/pages/miniplayer.dart';
 
 // import './player.dart';
@@ -14,6 +16,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late Box authbox;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    // Get reference to an already opened box
+    authbox = await Hive.openBox('auth');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +96,9 @@ class _HomeState extends State<Home> {
                         return Padding(
                           padding: const EdgeInsets.only(right: 30.0),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Get.snackbar("token", authbox.get('token'));
+                            },
                             child: Column(children: [
                               Container(
                                 width: 180,
