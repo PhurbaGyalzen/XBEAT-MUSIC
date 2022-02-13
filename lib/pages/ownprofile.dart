@@ -1,19 +1,20 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:xbeat/controllers/artistinfocontroller.dart';
+import 'package:xbeat/pages/login.dart';
 import 'package:xbeat/theme/colors.dart';
 
-class MyProfile extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
-  State<MyProfile> createState() => _MyProfileState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _MyProfileState extends State<MyProfile> {
+class _ProfileScreenState extends State<ProfileScreen> {
   late final Box authbox;
-  late ArtistInfoController artistInfoController;
+  late final ArtistInfoController artistInfoController;
 
   @override
   void initState() {
@@ -29,202 +30,162 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Obx(
-      () => Column(
-        children: [
-          Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [black, primary])),
-              child: Container(
-                width: double.infinity,
-                height: 350.0,
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          artistInfoController.profile.toString(),
+    return Obx(() => Scaffold(
+          appBar: AppBar(
+            backgroundColor: black,
+            title: Text(
+              "Phurba Gyalzen Sherpa",
+            ),
+            centerTitle: false,
+          ),
+          backgroundColor: black,
+          body: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage(
+                            "${artistInfoController.profile}",
+                          ),
+                          radius: 40,
                         ),
-                        radius: 50.0,
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        "${artistInfoController.username}",
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Card(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 5.0),
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.white,
-                        elevation: 5.0,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 22.0),
-                          child: Row(
+                        Expanded(
+                          flex: 1,
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Posts",
-                                      style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      "1200",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  buildStatColumn(455, "posts"),
+                                  buildStatColumn(artistInfoController.followers.toInt(), "followers"),
+                                  buildStatColumn(artistInfoController.following.toInt(), "following"),
+                                ],
                               ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Followers",
-                                      style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      "${artistInfoController.followers}",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      "Follow",
-                                      style: TextStyle(
-                                        color: Colors.redAccent,
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      "${artistInfoController.following}",
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FollowButton(
+                                    text: 'Sign Out',
+                                    backgroundColor: black,
+                                    textColor: white,
+                                    borderColor: Colors.grey,
+                                    function: () async {
+                                      await authbox.delete('token');
+                                      Get.offAll(() => LoginScreen());
+                                    },
+                                  )
+                                ],
                               ),
                             ],
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                ),
-              )),
-          Container(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 30.0, horizontal: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Info:",
-                    style: TextStyle(
-                        color: Colors.redAccent,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 28.0),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    'My name is Natasha and I am  a freelance mobile app developper.\n'
-                    'Having Experiece in Flutter and Android',
-                    style: TextStyle(
-                      fontSize: 22.0,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black,
-                      letterSpacing: 2.0,
+                      ],
                     ),
-                  ),
-                ],
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        top: 15,
+                      ),
+                      child: Text(
+                        "Phurba Gyalzen",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: white),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(
+                        top: 1,
+                      ),
+                      child: Text("I am a flutter developer!!!",
+                          style: TextStyle(color: white)),
+                    ),
+                  ],
+                ),
               ),
+              const Divider(
+                color: white,
+              ),
+            ],
+          ),
+        ));
+  }
+
+  Column buildStatColumn(int num, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          num.toString(),
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.bold, color: white),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 4),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+              color: Colors.grey,
             ),
           ),
-          SizedBox(
-            height: 20.0,
+        ),
+      ],
+    );
+  }
+}
+
+class FollowButton extends StatelessWidget {
+  final Function()? function;
+  final Color backgroundColor;
+  final Color borderColor;
+  final String text;
+  final Color textColor;
+  const FollowButton(
+      {Key? key,
+      required this.backgroundColor,
+      required this.borderColor,
+      required this.text,
+      required this.textColor,
+      this.function})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 2),
+      child: TextButton(
+        onPressed: function,
+        child: Container(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            border: Border.all(
+              color: borderColor,
+            ),
+            borderRadius: BorderRadius.circular(5),
           ),
-          Container(
-            width: 300.00,
-            child: RaisedButton(
-                onPressed: () {},
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80.0)),
-                elevation: 0.0,
-                padding: EdgeInsets.all(0.0),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.centerRight,
-                        end: Alignment.centerLeft,
-                        colors: [Colors.pink, Colors.pinkAccent]),
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: Container(
-                    constraints:
-                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Contact me",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26.0,
-                          fontWeight: FontWeight.w300),
-                    ),
-                  ),
-                )),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ],
+          width: 250,
+          height: 27,
+        ),
       ),
-    ));
+    );
   }
 }

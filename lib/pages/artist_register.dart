@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:xbeat/pages/root_app.dart';
+import 'package:xbeat/services/auth_service.dart';
 import 'package:xbeat/theme/colors.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -11,6 +13,19 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  late final Box authbox;
+
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+
+  void init() async {
+    // Get reference to an already opened box
+    authbox = await Hive.openBox('auth');
+  }
   bool hiddenPassword = true;
   bool hiddenPassword2 = true;
   // string for displaying the error Message
@@ -21,7 +36,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // editing Controller
   final firstNameEditingController = new TextEditingController();
   final secondNameEditingController = new TextEditingController();
-  final emailEditingController = new TextEditingController();
+  final usernameEditingController = new TextEditingController();
   final passwordEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
 
@@ -51,7 +66,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           prefixIcon: Icon(Icons.account_circle),
           fillColor: white,
           filled: true,
-          hintStyle: TextStyle(color: black),
+          hintStyle: TextStyle(color: grey),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "First Name",
           border: OutlineInputBorder(
@@ -80,30 +95,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           fillColor: white,
           filled: true,
-          hintStyle: TextStyle(color: black),
-          hintText: "Second Name",
+          hintStyle: TextStyle(color: grey),
+          hintText: "Last Name",
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
         ));
 
     //email field
-    final emailField = TextFormField(
+    final usernameField = TextFormField(
         autofocus: false,
-        controller: emailEditingController,
+        controller: usernameEditingController,
         keyboardType: TextInputType.emailAddress,
         cursorColor: black,
-        validator: (value) {
-          if (value!.isEmpty) {
-            return ("Please Enter Your Email");
-          }
-          // reg expression for email validation
-          if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-              .hasMatch(value)) {
-            return ("Please Enter a valid email");
-          }
-          return null;
-        },
         onSaved: (value) {
           firstNameEditingController.text = value!;
         },
@@ -111,10 +115,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Email",
+          hintText: "Email or Username",
           fillColor: white,
           filled: true,
-          hintStyle: TextStyle(color: black),
+          hintStyle: TextStyle(color: grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -143,7 +147,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           prefixIcon: Icon(Icons.vpn_key),
           fillColor: white,
           filled: true,
-          hintStyle: TextStyle(color: black),
+          hintStyle: TextStyle(color: grey),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
           border: OutlineInputBorder(
@@ -182,7 +186,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           prefixIcon: Icon(Icons.vpn_key),
           fillColor: white,
           filled: true,
-          hintStyle: TextStyle(color: black),
+          hintStyle: TextStyle(color: grey),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Confirm Password",
           border: OutlineInputBorder(
@@ -209,7 +213,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            signUp(emailEditingController.text, passwordEditingController.text);
+            signUp(firstNameEditingController.text, secondNameEditingController.text, usernameEditingController.text, passwordEditingController.text);
           },
           child: Text(
             "SignUp",
@@ -258,7 +262,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     SizedBox(height: 20),
                     secondNameField,
                     SizedBox(height: 20),
-                    emailField,
+                    usernameField,
                     SizedBox(height: 20),
                     passwordField,
                     SizedBox(height: 20),
@@ -276,9 +280,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void signUp(String email, String password) async {
+  void signUp(String firstName, String lastName, String username, String password) async {
     if (_formKey.currentState!.validate()) {
-      Get.to(RootApp());
+      var response = await AuthService.register(firstName, lastName, username, password);
+      if (response != null) {
+        Get.offAll(RootApp());
+        authbox.put("token", response.token);
+        Get.snackbar("token", "${authbox.get('token')}");
+        Get.snackbar(
+          "Welcome",
+          "Thanks for joining!!!",
+          icon: Icon(Icons.person_rounded, color: white),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.green[700],
+          colorText: white,
+          animationDuration: Duration(seconds: 2),
+          dismissDirection: DismissDirection.horizontal,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          "Cannot Register",
+          "Username Already Exists",
+          backgroundColor: Colors.red[900],
+          colorText: white,
+        );
+        Get.snackbar("Token", authbox.get("token"));
+      }
     }
   }
 }

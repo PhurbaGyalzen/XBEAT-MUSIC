@@ -34,7 +34,7 @@ class _RootAppState extends State<RootApp> {
         Home(),
         Search(),
         Search(),
-        MyProfile(),
+        ProfileScreen(),
       ],
     );
   }

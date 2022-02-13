@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
     init();
   }
 
-
   void init() async {
     // Get reference to an already opened box
     authbox = await Hive.openBox('auth');
@@ -33,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // editing controller
-  final TextEditingController emailController = new TextEditingController();
+  final TextEditingController usernameController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
 
   // string for displaying the error Message
@@ -45,16 +44,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final emailField = TextFormField(
         autofocus: false,
         style: TextStyle(color: black),
-        controller: emailController,
+        controller: usernameController,
         keyboardType: TextInputType.emailAddress,
         validator: (value) {
           if (value!.isEmpty) {
-            return ("Please Enter Your Email");
+            return ("Please Enter Your Email or Username");
           }
           return null;
         },
         onSaved: (value) {
-          emailController.text = value!;
+          usernameController.text = value!;
         },
         cursorColor: black,
         textInputAction: TextInputAction.next,
@@ -63,8 +62,8 @@ class _LoginScreenState extends State<LoginScreen> {
           filled: true,
           prefixIcon: Icon(Icons.mail),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
-          hintText: "Email",
-          hintStyle: TextStyle(color: black),
+          hintText: "Email or Username",
+          hintStyle: TextStyle(color: grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -98,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           prefixIcon: Icon(Icons.vpn_key),
           contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           hintText: "Password",
-          hintStyle: TextStyle(color: black),
+          hintStyle: TextStyle(color: grey),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -122,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            signIn(emailController.text, passwordController.text);
+            signIn(usernameController.text, passwordController.text);
           },
           child: Text(
             "Login",
