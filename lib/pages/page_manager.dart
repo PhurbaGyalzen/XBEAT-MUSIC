@@ -13,6 +13,7 @@ class PageManager {
   // Listeners: Updates going to the UI
   final _audioHandler = getIt<AudioHandler>();
   final currentSongTitleNotifier = ValueNotifier<String>('');
+  final currentSongThumbnailNotifier = ValueNotifier<String>('');
   final playlistNotifier = ValueNotifier<List<String>>([]);
   final progressNotifier = ProgressNotifier();
   final repeatButtonNotifier = RepeatButtonNotifier();
@@ -66,11 +67,26 @@ class PageManager {
     _audioHandler.updateQueue(mediaItems);
   }
 
+  // Load new playlist
+  Future<void> loadSingleSongPlaylist(var playlist) async {
+    final mediaItems = playlist
+        .map((song) => MediaItem(
+              id: song.id ?? '',
+              album: 'albumname',
+              title: song.title ?? '',
+              extras: {'url': song.url, 'thumbnail': song.thumbnail},
+            ))
+        .toList();
+
+    _audioHandler.updateQueue(mediaItems);
+  }
+
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) {
         playlistNotifier.value = [];
         currentSongTitleNotifier.value = '';
+        currentSongThumbnailNotifier.value = '';
       } else {
         final newList = playlist.map((item) => item.title).toList();
         playlistNotifier.value = newList;
@@ -133,6 +149,8 @@ class PageManager {
   void _listenToChangesInSong() {
     _audioHandler.mediaItem.listen((mediaItem) {
       currentSongTitleNotifier.value = mediaItem?.title ?? '';
+      currentSongThumbnailNotifier.value =
+          mediaItem?.extras!['thumbnail'] ?? '';
       _updateSkipButtons();
     });
   }

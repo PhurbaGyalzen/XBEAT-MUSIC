@@ -18,17 +18,13 @@ class DemoPlaylist extends PlaylistRepository {
     var result = [
       {
         'id': '010',
-        'title': 'Real Friends',
-        'album': 'Album Name',
-        'url':
-            'http://192.168.1.17:3000/stream/song/Real Friends - CAMILA CABELLO ft SWAE LEE.mp3'
+        'title': 'Stay',
+        'url': 'http://192.168.1.17:3000/stream/song/audio-1644749782863.mp3'
       },
       {
         'id': '022',
         'title': 'Infoki',
-        'album': 'Album Name',
-        'url':
-            'http://192.168.1.17:3000/stream/song/indie-folk-king-around-here-15045.mp3'
+        'url': 'http://192.168.1.17:3000/stream/song/audio-1644744695812.mp3'
       }
     ];
     return result;

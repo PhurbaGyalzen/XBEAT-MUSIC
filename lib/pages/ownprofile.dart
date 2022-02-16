@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:xbeat/controllers/artistinfocontroller.dart';
+import 'package:xbeat/controllers/artistsongscontroller.dart';
 import 'package:xbeat/pages/login.dart';
+import 'package:xbeat/pages/page_manager.dart';
+// import 'package:xbeat/pages/page_manager.dart';
+import 'package:xbeat/pages/steaming.dart';
+import 'package:xbeat/services/service_locator.dart';
+// import 'package:xbeat/services/http_service.dart';
+// import 'package:xbeat/services/service_locator.dart';
 import 'package:xbeat/theme/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late final Box authbox;
   late final ArtistInfoController artistInfoController;
+  late final ArtistSongsController artistSongsController;
 
   @override
   void initState() {
@@ -26,15 +34,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Get reference to an already opened box
     authbox = await Hive.openBox('auth');
     artistInfoController = Get.put(ArtistInfoController(authbox.get('token')));
+    artistSongsController =
+        Get.put(ArtistSongsController(authbox.get('token')));
   }
 
   @override
   Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
     return Obx(() => Scaffold(
           appBar: AppBar(
             backgroundColor: black,
             title: Text(
-              "Phurba Gyalzen Sherpa",
+              artistInfoController.username.toString(),
             ),
             centerTitle: false,
           ),
@@ -63,9 +74,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  buildStatColumn(455, "posts"),
-                                  buildStatColumn(artistInfoController.followers.toInt(), "followers"),
-                                  buildStatColumn(artistInfoController.following.toInt(), "following"),
+                                  buildStatColumn(
+                                      artistSongsController.songs.length,
+                                      "songs"),
+                                  buildStatColumn(
+                                      artistInfoController.followers.toInt(),
+                                      "followers"),
+                                  buildStatColumn(
+                                      artistInfoController.following.toInt(),
+                                      "following"),
                                 ],
                               ),
                               Row(
@@ -114,6 +131,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Divider(
                 color: white,
               ),
+              SizedBox(
+                  height: 150,
+                  child: ListView.builder(
+                    itemCount: artistSongsController.songs.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          onTap: () {
+                            pageManager.loadNewPlaylist();
+                            Get.to(StreamApp());
+                          },
+                          leading: FadeInImage.assetNetwork(
+                              placeholder: "assets/splash.png",
+                              image:
+                                  artistSongsController.songs[index].thumbnail),
+                          title: Text(
+                            artistSongsController.songs[index].title,
+                            style: TextStyle(color: white),
+                          ),
+                        ),
+                      );
+                    },
+                  ))
             ],
           ),
         ));
