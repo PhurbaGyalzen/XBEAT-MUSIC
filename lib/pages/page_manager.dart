@@ -60,6 +60,7 @@ class PageManager {
               id: song['id'] ?? '',
               album: song['album'] ?? '',
               title: song['title'] ?? '',
+              artUri: Uri.parse("http://192.168.1.17:3000/images/default-profile.jpg"),
               extras: {'url': song['url']},
             ))
         .toList();

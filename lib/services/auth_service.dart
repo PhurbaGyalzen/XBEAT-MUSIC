@@ -16,11 +16,11 @@ class AuthService {
     }
   }
 
-  static Future<RegisterArtistResponse?> register(String firstName, String fastName, String username, String password) async {
+  static Future<RegisterArtistResponse?> register(String firstName, String lastName, String username, String password) async {
     const endpoint = PersistentHtpp.baseUrl + 'artist/register';
     var response = await PersistentHtpp.client.post(Uri.parse(endpoint), body: {
       'firstName': firstName,
-      'lastName': fastName,
+      'lastName': lastName,
       'username': username,
       'password': password,
     });

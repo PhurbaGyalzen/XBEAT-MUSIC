@@ -30,6 +30,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     init();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void init() async {
     // Get reference to an already opened box
     authbox = await Hive.openBox('auth');
