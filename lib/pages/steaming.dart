@@ -7,6 +7,7 @@ import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_button_notifier.dart';
 import '../theme/colors.dart';
 import '../services/service_locator.dart';
+import 'package:shake/shake.dart';
 
 class StreamApp extends StatefulWidget {
   const StreamApp({Key? key}) : super(key: key);
@@ -16,10 +17,15 @@ class StreamApp extends StatefulWidget {
 }
 
 class _StreamAppState extends State<StreamApp> {
+  late ShakeDetector detector;
   @override
   void initState() {
     super.initState();
     getIt<PageManager>().init();
+    detector = ShakeDetector.waitForStart(onPhoneShake: () {
+      // Do stuff on phone shake
+      getIt<PageManager>().shuffle();
+    });
   }
 
   @override
@@ -42,6 +48,26 @@ class _StreamAppState extends State<StreamApp> {
               Icons.keyboard_arrow_down_sharp,
               size: 40,
             )),
+        actions: [
+          PopupMenuButton(
+              itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text('Shake and Suffle ON'),
+                      value: 1,
+                    ),
+                    PopupMenuItem(
+                      child: Text("Shake and Suffle OFF"),
+                      value: 0,
+                    )
+                  ],
+              onSelected: (value) {
+                if (value == 1) {
+                  detector.startListening();
+                } else {
+                  detector.stopListening();
+                }
+              }),
+        ],
       ),
       backgroundColor: black,
       body: Container(
