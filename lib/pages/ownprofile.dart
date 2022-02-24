@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -5,6 +7,7 @@ import 'package:xbeat/controllers/artistinfocontroller.dart';
 import 'package:xbeat/controllers/artistsongscontroller.dart';
 import 'package:xbeat/pages/login.dart';
 import 'package:xbeat/pages/page_manager.dart';
+import 'package:image_picker/image_picker.dart';
 // import 'package:xbeat/pages/page_manager.dart';
 import 'package:xbeat/pages/steaming.dart';
 import 'package:xbeat/services/service_locator.dart';
@@ -23,6 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late final Box authbox;
   late final ArtistInfoController artistInfoController;
   late final ArtistSongsController artistSongsController;
+  final ImagePicker imagePicker = ImagePicker();
+  late File? pickedImage = null;
 
   @override
   void initState() {
@@ -41,6 +46,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
     artistInfoController = Get.put(ArtistInfoController(authbox.get('token')));
     artistSongsController =
         Get.put(ArtistSongsController(authbox.get('token')));
+  }
+
+  pickImage(ImageSource imageType) async {
+    try {
+      final photo = await ImagePicker().pickImage(source: imageType);
+      if (photo == null) return;
+      final tempImage = File(photo.path);
+      setState(() {
+        pickedImage = tempImage;
+      });
+
+      Get.back();
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  void imagePickerOption() {
+    Get.bottomSheet(
+      SingleChildScrollView(
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10.0),
+            topRight: Radius.circular(10.0),
+          ),
+          child: Container(
+            color: black,
+            height: 250,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Update your profile picture from",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: primary, // Background color
+                    ),
+                    onPressed: () {
+                      pickImage(ImageSource.camera);
+                    },
+                    icon: const Icon(Icons.camera),
+                    label: const Text("CAMERA"),
+                  ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: primary, // Background color
+                    ),
+                    onPressed: () {
+                      pickImage(ImageSource.gallery);
+                    },
+                    icon: const Icon(Icons.image),
+                    label: const Text("GALLERY"),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      primary: primary, // Background color
+                    ),
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: const Icon(Icons.close),
+                    label: const Text("CANCEL"),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -63,12 +152,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     Row(
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(
-                            "${artistInfoController.profile}",
+                        GestureDetector(
+                          child: ClipRRect(
+                            child: pickedImage != null
+                                ? Image.file(
+                                    pickedImage!,
+                                    height: 90,
+                                    width: 90,
+                                  )
+                                : Image.network(
+                                    "${artistInfoController.profile}",
+                                    width: 90,
+                                    height: 90,
+                                    fit: BoxFit.cover,
+                                  ),
+                            borderRadius: BorderRadius.all(Radius.circular(50)),
                           ),
-                          radius: 40,
+                          onTap: () {
+                            imagePickerOption();
+                          },
                         ),
                         Expanded(
                           flex: 1,
