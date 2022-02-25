@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -10,6 +9,7 @@ import 'package:xbeat/pages/page_manager.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:xbeat/pages/page_manager.dart';
 import 'package:xbeat/pages/steaming.dart';
+import 'package:xbeat/services/artitst_service.dart';
 import 'package:xbeat/services/service_locator.dart';
 // import 'package:xbeat/services/http_service.dart';
 // import 'package:xbeat/services/service_locator.dart';
@@ -53,6 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final photo = await ImagePicker().pickImage(source: imageType);
       if (photo == null) return;
       final tempImage = File(photo.path);
+      ArtistService.updateProfile(tempImage, authbox.get('token'));
+      print(photo.path);
       setState(() {
         pickedImage = tempImage;
       });
