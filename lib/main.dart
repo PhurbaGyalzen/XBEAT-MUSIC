@@ -18,6 +18,6 @@ void main() async {
 
   runApp(GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    home: box.containsKey('token')? RootApp(): LoginScreen(),
+    home: box.containsKey('token') ? RootApp() : LoginScreen(),
   ));
 }

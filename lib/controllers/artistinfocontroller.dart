@@ -6,6 +6,9 @@ class ArtistInfoController extends GetxController {
   var isLoading = true.obs;
   var id = "".obs;
   var username = "".obs;
+  var firstName = "".obs;
+  var lastName = "".obs;
+  var description = "".obs;
   var profile = "".obs;
   var followers = 0.obs;
   var following = 0.obs;
@@ -30,6 +33,9 @@ class ArtistInfoController extends GetxController {
       if (responseSongs != null) {
         id.value = responseSongs.artist.id;
         username.value = responseSongs.artist.username;
+        firstName.value = responseSongs.artist.firstName;
+        lastName.value = responseSongs.artist.lastName;
+        description.value = responseSongs.artist.description;
         profile.value = PersistentHtpp.baseUrl + responseSongs.artist.profile;
         followers.value = responseSongs.artist.followers.length;
         following.value = responseSongs.artist.following.length;

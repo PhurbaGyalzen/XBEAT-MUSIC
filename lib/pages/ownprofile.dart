@@ -9,6 +9,7 @@ import 'package:xbeat/pages/page_manager.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:xbeat/pages/page_manager.dart';
 import 'package:xbeat/pages/steaming.dart';
+import 'package:xbeat/pages/update_detail.dart';
 import 'package:xbeat/services/artitst_service.dart';
 import 'package:xbeat/services/service_locator.dart';
 // import 'package:xbeat/services/http_service.dart';
@@ -144,6 +145,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               artistInfoController.username.toString(),
             ),
             centerTitle: false,
+            actions: [
+              PopupMenuButton(
+                  itemBuilder: (context) => [
+                        PopupMenuItem(
+                          child: Text('Edit Details'),
+                          value: 1,
+                          height: 30,
+                        ),
+                      ],
+                  onSelected: (value) {
+                    if (value == 1) {
+                      Get.to(() => UpdateDetailScreen());
+                    }
+                  }),
+            ],
           ),
           backgroundColor: black,
           body: ListView(
@@ -207,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       await authbox.delete('token');
                                       Get.offAll(() => LoginScreen());
                                     },
-                                  )
+                                  ),
                                 ],
                               ),
                             ],
@@ -221,7 +237,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         top: 15,
                       ),
                       child: Text(
-                        "Phurba Gyalzen",
+                        artistInfoController.firstName.toString() +
+                            " " +
+                            artistInfoController.lastName.toString(),
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: white),
                       ),
@@ -231,7 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(
                         top: 1,
                       ),
-                      child: Text("I am a flutter developer!!!",
+                      child: Text(artistInfoController.description.toString(),
                           style: TextStyle(color: white)),
                     ),
                   ],
