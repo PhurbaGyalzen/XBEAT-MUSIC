@@ -1,7 +1,10 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:get/get.dart';
 import 'page_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:all_sensors/all_sensors.dart';
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
 import '../notifiers/repeat_button_notifier.dart';
@@ -18,10 +21,17 @@ class StreamApp extends StatefulWidget {
 
 class _StreamAppState extends State<StreamApp> {
   late ShakeDetector detector;
+  bool proximityValues = false;
   @override
   void initState() {
     super.initState();
     getIt<PageManager>().init();
+    proximityEvents.listen((ProximityEvent event) {
+      setState(() {
+        // event.getValue return true or false
+        proximityValues = event.getValue();
+      });
+    });
     detector = ShakeDetector.waitForStart(onPhoneShake: () {
       // Do stuff on phone shake
       getIt<PageManager>().shuffle();
