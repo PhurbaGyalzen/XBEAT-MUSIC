@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:just_audio/just_audio.dart';
 import "package:flutter/foundation.dart";
+import 'package:get/get.dart';
+import 'package:xbeat/controllers/artistsongscontroller.dart';
 
 import '../notifiers/play_button_notifier.dart';
 import '../notifiers/progress_notifier.dart';
@@ -21,6 +23,7 @@ class PageManager {
   final playButtonNotifier = PlayButtonNotifier();
   final isLastSongNotifier = ValueNotifier<bool>(true);
   final isShuffleModeEnabledNotifier = ValueNotifier<bool>(false);
+  final ArtistSongsController artistSongsController = Get.find();
   // final isPlayerLoaded = ValueNotifier<bool>(false);
 
   // Events: Calls coming from the UI
@@ -60,7 +63,8 @@ class PageManager {
               id: song['id'] ?? '',
               album: song['album'] ?? '',
               title: song['title'] ?? '',
-              artUri: Uri.parse("http://192.168.1.17:3000/images/default-profile.jpg"),
+              artUri: Uri.parse(
+                  "http://192.168.1.17:3000/images/default-profile.jpg"),
               extras: {'url': song['url']},
             ))
         .toList();
@@ -69,12 +73,15 @@ class PageManager {
   }
 
   // Load new playlist
-  Future<void> loadSingleSongPlaylist(var playlist) async {
+  Future<void> loadArtistSongPlaylist() async {
+    var playlist = artistSongsController.songs;
+    print(playlist.map((element) => element.id));
     final mediaItems = playlist
         .map((song) => MediaItem(
               id: song.id ?? '',
               album: 'albumname',
               title: song.title ?? '',
+              artUri: Uri.parse(song.thumbnail),
               extras: {'url': song.url, 'thumbnail': song.thumbnail},
             ))
         .toList();

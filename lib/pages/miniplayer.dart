@@ -42,21 +42,16 @@ class MiniPlayer extends StatelessWidget {
   Widget build(BuildContext context) {
     final pageManager = getIt<PageManager>();
     return ValueListenableBuilder<String>(
-      valueListenable: pageManager.currentSongTitleNotifier,
-      builder: (_, title, __) {
+      valueListenable: pageManager.currentSongThumbnailNotifier,
+      builder: (_, thumbnail, __) {
         return Column(children: [
           ListTile(
             tileColor: black,
             dense: true,
-            leading: Image.network("http://192.168.1.17:3000/images/default-profile.jpg"),
-            title: Text(
-              title,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-                color: white,
-              ),
-            ),
+            leading: thumbnail != ""
+                ? Image.network(thumbnail)
+                : Image.asset('assets/giphy.gif'),
+            title: CurrentTitle(),
             onTap: () {
               Get.to(StreamApp());
             },
@@ -71,6 +66,30 @@ class MiniPlayer extends StatelessWidget {
             child: AudioProgressBar(),
           ),
         ]);
+      },
+    );
+  }
+}
+
+class CurrentTitle extends StatelessWidget {
+  const CurrentTitle({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
+    return ValueListenableBuilder<String>(
+      valueListenable: pageManager.currentSongTitleNotifier,
+      builder: (_, title, __) {
+        return Text(
+          title,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+            color: white,
+          ),
+        );
       },
     );
   }

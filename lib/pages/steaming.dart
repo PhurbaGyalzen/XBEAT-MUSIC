@@ -107,17 +107,7 @@ class _StreamAppState extends State<StreamApp> {
                     Padding(
                         padding:
                             const EdgeInsets.only(left: 30, right: 30, top: 20),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: FadeInImage.assetNetwork(
-                            image:
-                                "http://192.168.1.17:3000/images/default-profile.jpg",
-                            placeholder: "assets/giphy.gif",
-                            width: size.width - 60,
-                            height: size.width - 60,
-                            fit: BoxFit.cover,
-                          ),
-                        )),
+                        child: CurrentThumbnail(size: size)),
                   ],
                 ),
                 SizedBox(
@@ -131,21 +121,53 @@ class _StreamAppState extends State<StreamApp> {
                 AudioProgressBar(),
                 AudioControlButtons(),
                 SizedBox(
-                  height: 150,
+                  height: 300,
                   child: Playlist(),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    getIt<PageManager>().loadNewPlaylist();
-                  },
-                  child: Text(" Play New Playlist"),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     getIt<PageManager>().loadArtistSongPlaylist();
+                //   },
+                //   child: Text(" Play New Playlist"),
+                // ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class CurrentThumbnail extends StatelessWidget {
+  const CurrentThumbnail({
+    Key? key,
+    required this.size,
+  }) : super(key: key);
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    final pageManager = getIt<PageManager>();
+    return ValueListenableBuilder<String>(
+      valueListenable: pageManager.currentSongThumbnailNotifier,
+      builder: (_, thumnail, __) {
+        return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: FadeInImage.assetNetwork(
+        image:
+            thumnail,
+        placeholder: "assets/giphy.gif",
+        width: size.width - 60,
+        height: size.width - 60,
+        fit: BoxFit.cover,
+      ),
+    );
+      },
+    );
+    
+    
   }
 }
 

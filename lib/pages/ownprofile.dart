@@ -26,7 +26,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late final Box authbox;
   late final ArtistInfoController artistInfoController;
-  late final ArtistSongsController artistSongsController;
+  ArtistSongsController artistSongsController = Get.find();
   final ImagePicker imagePicker = ImagePicker();
   late File? pickedImage = null;
 
@@ -45,8 +45,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Get reference to an already opened box
     authbox = await Hive.openBox('auth');
     artistInfoController = Get.put(ArtistInfoController(authbox.get('token')));
-    artistSongsController =
-        Get.put(ArtistSongsController(authbox.get('token')));
   }
 
   pickImage(ImageSource imageType) async {
@@ -259,24 +257,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: white,
               ),
               SizedBox(
-                  height: 150,
+                  height: 400,
                   child: ListView.builder(
                     itemCount: artistSongsController.songs.length,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
+                          dense: false, 
                           onTap: () {
-                            pageManager.loadNewPlaylist();
+                            pageManager.loadArtistSongPlaylist();
                             Get.to(StreamApp());
                           },
                           leading: FadeInImage.assetNetwork(
                               placeholder: "assets/splash.png",
+                              height: 90,
                               image:
                                   artistSongsController.songs[index].thumbnail),
                           title: Text(
                             artistSongsController.songs[index].title,
-                            style: TextStyle(color: white),
+                            style: TextStyle(color: white, fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ),
                       );
