@@ -79,7 +79,7 @@ class PageManager {
     final mediaItems = playlist
         .map((song) => MediaItem(
               id: song.id ?? '',
-              album: song.album ? song.album : '',
+              // album: song.album ? song.album : '',
               title: song.title ?? '',
               artUri: Uri.parse(song.thumbnail),
               extras: {'url': song.url, 'thumbnail': song.thumbnail},

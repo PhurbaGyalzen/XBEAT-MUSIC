@@ -268,6 +268,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           visualDensity: VisualDensity.standard,
                           dense: false,
                           onTap: () {
+                            var currentSong = artistSongsController.songs[index];
+                            artistSongsController.songs.removeAt(index);
+                            artistSongsController.songs.insert(0, currentSong);
                             pageManager.loadArtistSongPlaylist();
                             Get.to(StreamApp());
                           },
