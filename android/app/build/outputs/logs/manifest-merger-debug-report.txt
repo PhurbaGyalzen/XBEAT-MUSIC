@@ -7,6 +7,7 @@ INJECTED from C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\android
 MERGED from C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\android\app\src\main\AndroidManifest.xml:1:1-40:12
 MERGED from [:just_audio] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\just_audio\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-19:12
+MERGED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-17:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:audio_service] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\audio_service\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:sqflite] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\sqflite\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -148,6 +149,8 @@ MERGED from [:just_audio] C:\Users\Lenovo\Desktop\Building an App with Flutter\x
 MERGED from [:just_audio] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\just_audio\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:flutter_plugin_android_lifecycle] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\flutter_plugin_android_lifecycle\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:audio_service] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\audio_service\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-44
@@ -240,14 +243,30 @@ ADDED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\
 		ADDED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:15:17-72
 	android:name
 		ADDED from [:image_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\image_picker\intermediates\library_manifest\debug\AndroidManifest.xml:14:17-67
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-80
+	android:name
+		ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:7:22-77
+queries
+ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:9:5-15:15
+MERGED from [androidx.media2:media2-session:1.1.3] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\de16f4b64dab27be6e205eda03cecad0\jetified-media2-session-1.1.3\AndroidManifest.xml:24:5-34:15
+MERGED from [androidx.media2:media2-session:1.1.3] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\de16f4b64dab27be6e205eda03cecad0\jetified-media2-session-1.1.3\AndroidManifest.xml:24:5-34:15
+intent#action:name:android.intent.action.GET_CONTENT+data:mimeType:*/*
+ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:10:9-14:18
+action#android.intent.action.GET_CONTENT
+ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:13-72
+	android:name
+		ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:11:21-69
+data
+ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-44
+	android:mimeType
+		ADDED from [:file_picker] C:\Users\Lenovo\Desktop\Building an App with Flutter\xbeat\build\file_picker\intermediates\library_manifest\debug\AndroidManifest.xml:13:19-41
 uses-permission#android.permission.ACCESS_NETWORK_STATE
 ADDED from [com.google.android.exoplayer:exoplayer-core:2.15.0] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\1c8029bc9c6470bdd4331a8beb2ed60c\jetified-exoplayer-core-2.15.0\AndroidManifest.xml:24:5-79
 MERGED from [com.google.android.exoplayer:exoplayer-common:2.15.0] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\eb7b1fd5142030bd15fd1d4bfbc432a2\jetified-exoplayer-common-2.15.0\AndroidManifest.xml:24:5-79
 MERGED from [com.google.android.exoplayer:exoplayer-common:2.15.0] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\eb7b1fd5142030bd15fd1d4bfbc432a2\jetified-exoplayer-common-2.15.0\AndroidManifest.xml:24:5-79
 	android:name
 		ADDED from [com.google.android.exoplayer:exoplayer-core:2.15.0] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\1c8029bc9c6470bdd4331a8beb2ed60c\jetified-exoplayer-core-2.15.0\AndroidManifest.xml:24:22-76
-queries
-ADDED from [androidx.media2:media2-session:1.1.3] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\de16f4b64dab27be6e205eda03cecad0\jetified-media2-session-1.1.3\AndroidManifest.xml:24:5-34:15
 intent#action:name:android.media.browse.MediaBrowserService
 ADDED from [androidx.media2:media2-session:1.1.3] C:\Users\Lenovo\.gradle\caches\transforms-2\files-2.1\de16f4b64dab27be6e205eda03cecad0\jetified-media2-session-1.1.3\AndroidManifest.xml:25:9-27:18
 intent#action:name:androidx.media2.session.MediaSessionService

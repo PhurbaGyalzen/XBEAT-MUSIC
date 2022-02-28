@@ -3,6 +3,7 @@ import 'package:xbeat/pages/home.dart';
 // import 'package:xbeat/pages/login.dart';
 import 'package:xbeat/pages/miniplayer.dart';
 import 'package:xbeat/pages/ownprofile.dart';
+import 'package:xbeat/pages/upload_song.dart';
 import '../theme/colors.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class _RootAppState extends State<RootApp> {
       children: [
         Home(),
         Search(),
-        Search(),
+        UploadSongScreen(),
         ProfileScreen(),
       ],
     );
