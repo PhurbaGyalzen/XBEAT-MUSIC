@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:xbeat/controllers/artistinfocontroller.dart';
+import 'package:xbeat/controllers/artistsongscontroller.dart';
 import 'package:xbeat/services/artitst_service.dart';
 // import 'package:xbeat/pages/root_app.dart';
 import 'package:xbeat/theme/colors.dart';
@@ -16,6 +17,7 @@ class UpdateDetailScreen extends StatefulWidget {
 class _UpdateDetailScreenState extends State<UpdateDetailScreen> {
   late final Box authbox;
   late ArtistInfoController artistInfoController = Get.find();
+  ArtistSongsController artistSongsController = Get.find();
 
   @override
   void initState() {

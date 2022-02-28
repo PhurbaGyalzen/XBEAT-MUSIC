@@ -257,55 +257,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const Divider(
                 color: white,
               ),
-              SizedBox(
-                  height: 400,
-                  child: ListView.builder(
-                    itemCount: artistSongsController.songs.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          visualDensity: VisualDensity.standard,
-                          dense: false,
-                          onTap: () {
-                            var currentSong = artistSongsController.songs[index];
-                            artistSongsController.songs.removeAt(index);
-                            artistSongsController.songs.insert(0, currentSong);
-                            pageManager.loadArtistSongPlaylist();
-                            Get.to(StreamApp());
-                          },
-                          leading: FadeInImage.assetNetwork(
-                              placeholder: "assets/splash.png",
-                              height: 90,
-                              image:
-                                  artistSongsController.songs[index].thumbnail),
-                          title: Text(
-                            artistSongsController.songs[index].title,
-                            style: TextStyle(
-                                color: white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () async {
-                              var response = await SongsService.deleteSong(
-                                  authbox.get('token'),
-                                  artistSongsController.songs[index].id);
-                              if (response == 200) {
-                                Get.snackbar('Success', 'Song deleted');
-                                artistSongsController.songs.removeAt(index);
-                              } else if (response >= 500) {
-                                Get.snackbar('Error', 'Server error');
-                              }
-                              ;
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SizedBox(
+                    height: 600,
+                    child: ListView.builder(
+                      itemCount: artistSongsController.songs.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            visualDensity: VisualDensity.standard,
+                            dense: false,
+                            onTap: () {
+                              var currentSong = artistSongsController.songs[index];
+                              artistSongsController.songs.removeAt(index);
+                              artistSongsController.songs.insert(0, currentSong);
+                              pageManager.loadArtistSongPlaylist();
+                              Get.to(StreamApp());
                             },
-                            icon: Icon(Icons.delete_forever_outlined,
-                                color: white),
+                            leading: FadeInImage.assetNetwork(
+                                placeholder: "assets/splash.png",
+                                height: 90,
+                                image:
+                                    artistSongsController.songs[index].thumbnail),
+                            title: Text(
+                              artistSongsController.songs[index].title,
+                              style: TextStyle(
+                                  color: white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15),
+                            ),
+                            trailing: IconButton(
+                              onPressed: () async {
+                                var response = await SongsService.deleteSong(
+                                    authbox.get('token'),
+                                    artistSongsController.songs[index].id);
+                                if (response == 200) {
+                                  Get.snackbar('Success', 'Song deleted');
+                                  artistSongsController.songs.removeAt(index);
+                                } else if (response >= 500) {
+                                  Get.snackbar('Error', 'Server error');
+                                }
+                                ;
+                              },
+                              icon: Icon(Icons.delete_forever_outlined,
+                                  color: white),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  ))
+                        );
+                      },
+                    )),
+              )
             ],
           ),
         ));

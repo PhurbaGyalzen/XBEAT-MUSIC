@@ -3,6 +3,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:xbeat/controllers/artistsongscontroller.dart';
+import 'package:xbeat/models/songs.dart';
+import 'package:xbeat/services/http_service.dart';
 import 'package:xbeat/services/songs_service.dart';
 import 'package:xbeat/theme/colors.dart';
 
@@ -15,7 +18,7 @@ class UploadSongScreen extends StatefulWidget {
 
 class _UploadSongScreenState extends State<UploadSongScreen> {
   late final Box authbox;
-
+  ArtistSongsController artistSongsController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -194,7 +197,10 @@ class _UploadSongScreenState extends State<UploadSongScreen> {
                     SizedBox(height: 10),
                     pickAudioButton,
                     SizedBox(height: 20),
-                     Container(child: isLoading? CircularProgressIndicator(): uploadSongButton),
+                    Container(
+                        child: isLoading
+                            ? CircularProgressIndicator()
+                            : uploadSongButton),
                     SizedBox(height: 15),
                   ],
                 ),
@@ -219,6 +225,12 @@ class _UploadSongScreenState extends State<UploadSongScreen> {
         imageFile = '';
         isLoading = false;
       });
+      var song = Song.fromJson(res['song']);
+      var songurl = song.url;
+      var thumbnail = song.thumbnail;
+      song.url = PersistentHtpp.baseUrl + songurl;
+      song.thumbnail = PersistentHtpp.baseUrl + thumbnail;
+      artistSongsController.songs.add(song);
       Get.snackbar(
         "sucess",
         "Song added successfully",
