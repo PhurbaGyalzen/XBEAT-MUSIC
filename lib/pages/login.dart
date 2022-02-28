@@ -6,6 +6,19 @@ import "../theme/colors.dart";
 import "package:get/get.dart";
 import 'package:hive/hive.dart';
 
+class PasswordFieldValidator {
+  static String? validate(String value) {
+    RegExp regex = new RegExp(r'^.{6,}$');
+    if (value.isEmpty) {
+      return ("Password is required for login");
+    }
+    if (!regex.hasMatch(value)) {
+      return ("Enter Valid Password(Min. 6 Character)");
+    }
+    return null;
+  }
+}
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -78,15 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
         controller: passwordController,
         cursorColor: black,
         obscureText: hiddenPassword,
-        validator: (value) {
-          RegExp regex = new RegExp(r'^.{6,}$');
-          if (value!.isEmpty) {
-            return ("Password is required for login");
-          }
-          if (!regex.hasMatch(value)) {
-            return ("Enter Valid Password(Min. 6 Character)");
-          }
-        },
+        validator:(value)=>PasswordFieldValidator.validate(value!),
         onSaved: (value) {
           passwordController.text = value!;
         },
