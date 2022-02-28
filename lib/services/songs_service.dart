@@ -18,4 +18,11 @@ class SongsService {
     }
     return null;
   }
+
+  static Future<int> deleteSong(String token, String id) async {
+    var endpoint = PersistentHtpp.baseUrl + 'artist/song/' + '$id';
+    var response = await PersistentHtpp.client.delete(Uri.parse(endpoint),
+        headers: {'Authorization': 'Bearer $token'});
+    return response.statusCode;
+  }
 }

@@ -12,6 +12,7 @@ import 'package:xbeat/pages/steaming.dart';
 import 'package:xbeat/pages/update_detail.dart';
 import 'package:xbeat/services/artitst_service.dart';
 import 'package:xbeat/services/service_locator.dart';
+import 'package:xbeat/services/songs_service.dart';
 // import 'package:xbeat/services/http_service.dart';
 // import 'package:xbeat/services/service_locator.dart';
 import 'package:xbeat/theme/colors.dart';
@@ -264,7 +265,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
-                          dense: false, 
+                          visualDensity: VisualDensity.standard,
+                          dense: false,
                           onTap: () {
                             pageManager.loadArtistSongPlaylist();
                             Get.to(StreamApp());
@@ -276,7 +278,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   artistSongsController.songs[index].thumbnail),
                           title: Text(
                             artistSongsController.songs[index].title,
-                            style: TextStyle(color: white, fontWeight: FontWeight.bold, fontSize: 15),
+                            style: TextStyle(
+                                color: white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                          trailing: IconButton(
+                            onPressed: () async {
+                              var response = await SongsService.deleteSong(
+                                  authbox.get('token'),
+                                  artistSongsController.songs[index].id);
+                              if (response == 200) {
+                                Get.snackbar('Success', 'Song deleted');
+                                artistSongsController.songs.removeAt(index);
+                              } else if (response >= 500) {
+                                Get.snackbar('Error', 'Server error');
+                              }
+                              ;
+                            },
+                            icon: Icon(Icons.delete_forever_outlined,
+                                color: white),
                           ),
                         ),
                       );
