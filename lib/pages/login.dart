@@ -206,7 +206,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response != null) {
         Get.offAll(RootApp());
         authbox.put("token", response.token);
-        Get.snackbar("token", "${authbox.get('token')}");
+        // Get.snackbar("token", "${authbox.get('token')}");
         Get.snackbar(
           "Welcome",
           "Thanks for joining again!!!",
@@ -225,7 +225,6 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.red[900],
           colorText: white,
         );
-        Get.snackbar("Token", authbox.get("token"));
       }
     }
   }

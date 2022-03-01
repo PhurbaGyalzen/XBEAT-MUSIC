@@ -270,17 +270,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             visualDensity: VisualDensity.standard,
                             dense: false,
                             onTap: () {
-                              var currentSong = artistSongsController.songs[index];
+                              var currentSong =
+                                  artistSongsController.songs[index];
                               artistSongsController.songs.removeAt(index);
-                              artistSongsController.songs.insert(0, currentSong);
+                              artistSongsController.songs
+                                  .insert(0, currentSong);
                               pageManager.loadArtistSongPlaylist();
                               Get.to(StreamApp());
                             },
                             leading: FadeInImage.assetNetwork(
                                 placeholder: "assets/splash.png",
                                 height: 90,
-                                image:
-                                    artistSongsController.songs[index].thumbnail),
+                                image: artistSongsController
+                                    .songs[index].thumbnail),
                             title: Text(
                               artistSongsController.songs[index].title,
                               style: TextStyle(

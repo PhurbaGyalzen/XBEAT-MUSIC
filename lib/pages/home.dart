@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:xbeat/pages/miniplayer.dart';
+import 'package:xbeat/pages/steaming.dart';
 
 // import './player.dart';
 // import 'package:get/get.dart';
@@ -99,7 +100,7 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.only(right: 30.0),
                           child: GestureDetector(
                             onTap: () {
-                              Get.snackbar("token", authbox.get('token'));
+                              Get.to(StreamApp());
                             },
                             child: Column(children: [
                               Container(

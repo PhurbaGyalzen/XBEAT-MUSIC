@@ -33,7 +33,6 @@ class _RootAppState extends State<RootApp> {
       index: activeTab,
       children: [
         Home(),
-        Search(),
         UploadSongScreen(),
         ProfileScreen(),
       ],
@@ -63,16 +62,12 @@ class _RootAppState extends State<RootApp> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.music_note),
-            label: 'Player',
+            label: 'Add Music',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
+            icon: Icon(Icons.person),
+            label: 'Profile',
           ),
         ]);
   }
